@@ -18,8 +18,10 @@ const SheetSync = {
     },
 
     // 送出一筆筆記；失敗就排進佇列
-    send: function(note) {
+    // extras: { rating, audioBlob }
+    send: function(note, extras) {
         if (!this.isConfigured()) return;
+        extras = extras || {};
 
         const travelerId = (window.TravelerStore && typeof window.TravelerStore.getTravelerId === 'function')
             ? window.TravelerStore.getTravelerId()
@@ -32,17 +34,65 @@ const SheetSync = {
                 }
             })();
 
+        const hasAudio = !!(note.audio || extras.audioBlob);
+        const rating = extras.rating || note.rating || '';
+        const extraMarks = [];
+        if (hasAudio) extraMarks.push('有錄音');
+        if (rating) extraMarks.push('評分 ' + rating);
+
         const payload = {
             mission: note.mission || '',
             emotion: note.emotion || '',
-            content: note.content || '',
+            content: extraMarks.length
+                ? ((note.content || '') + ' （' + extraMarks.join('，') + '）')
+                : (note.content || ''),
             date: note.date || '',
             timestamp: note.timestamp || Date.now(),
             travelerId: travelerId,
-            userAgent: navigator.userAgent
+            userAgent: navigator.userAgent,
+            hasAudio: hasAudio,
+            rating: rating
         };
 
+        const audioBlob = extras.audioBlob;
+        if (audioBlob && typeof FileReader !== 'undefined') {
+            this._blobToBase64(audioBlob).then((base64) => {
+                // 超過約 2MB 原始檔就不夾帶，避免手機送不出；試算表仍會標「有錄音」
+                if (base64 && base64.length < 2800000) {
+                    payload.audioBase64 = base64;
+                    payload.audioMime = audioBlob.type || 'audio/webm';
+                }
+                this._post(payload).catch(() => this._enqueue(this._queueSafe(payload)));
+            }).catch(() => {
+                this._post(payload).catch(() => this._enqueue(payload));
+            });
+            return;
+        }
+
         this._post(payload).catch(() => this._enqueue(payload));
+    },
+
+    _queueSafe: function(payload) {
+        const queued = {};
+        Object.keys(payload).forEach((key) => {
+            if (key !== 'audioBase64') queued[key] = payload[key];
+        });
+        return queued;
+    },
+
+    _blobToBase64: function(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const result = String(reader.result || '');
+                const comma = result.indexOf(',');
+                resolve(comma >= 0 ? result.slice(comma + 1) : result);
+            };
+            reader.onerror = function() {
+                reject(reader.error);
+            };
+            reader.readAsDataURL(blob);
+        });
     },
 
     _post: function(payload) {

@@ -98,13 +98,14 @@ function recordMissionCompletion(taskKey, options = {}) {
     missionStats.completedCount += 1;
     missionStats.notesCount += notesAdded;
 
-    // 自評分數（簡單版：使用 prompt 要求 1–5 分）
+    let rating = '';
     if (askRating) {
         const input = window.prompt('完成這一關後，你此刻的整體感受（1-5 分，5 分為非常有幫助）？', '4');
         if (input !== null) {
             const score = parseInt(input.trim(), 10);
             if (!isNaN(score) && score >= 1 && score <= 5) {
                 missionStats.selfRatings.push(score);
+                rating = String(score);
             }
         }
     }
@@ -135,6 +136,7 @@ function recordMissionCompletion(taskKey, options = {}) {
     }
 
     saveEsgStats(stats);
+    return rating;
 }
 
 if (typeof window !== 'undefined') {

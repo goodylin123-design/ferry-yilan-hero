@@ -534,25 +534,29 @@ const AIDialogue = {
         notes.unshift(note);
         localStorage.setItem('whisperNotes', JSON.stringify(notes));
 
-        if (window.SheetSync) {
-            window.SheetSync.send(note);
-        }
-
         if (window.TravelerStore) {
             window.TravelerStore.recordMindNote(note);
         }
-        
+
+        let rating = '';
         if (window.TaskProgress) {
             const completed = window.TaskProgress.completeTask(this.missionKey);
             if (completed) {
                 window.TaskProgress.showTaskCompleteNotification(this.missionKey);
                 if (window.EsgStats) {
-                    window.EsgStats.recordMissionCompletion(this.missionKey, {
+                    rating = window.EsgStats.recordMissionCompletion(this.missionKey, {
                         notesAdded: 1,
                         askRating: true
-                    });
+                    }) || '';
                 }
             }
+        }
+
+        if (window.SheetSync) {
+            window.SheetSync.send(note, {
+                rating: rating,
+                audioBlob: this.state.recordedAudio || null
+            });
         }
         
         const successMsg = document.createElement('div');

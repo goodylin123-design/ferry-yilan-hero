@@ -51,15 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
         notes.unshift(note);
         localStorage.setItem('whisperNotes', JSON.stringify(notes));
 
-        if (window.SheetSync) {
-            window.SheetSync.send(note);
-        }
-
         // 同步寫入 TravelerStore 的心靈筆記資料結構
         if (window.TravelerStore) {
             window.TravelerStore.recordMindNote(note);
         }
-        
+
+        let rating = '';
         // 標記第三關任務為完成
         if (window.TaskProgress) {
             const completed = window.TaskProgress.completeTask('dawn');
@@ -67,10 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.TaskProgress.showTaskCompleteNotification('dawn');
                 // 更新 ESG 統計：完成次數 + 筆記數 + 自評分數 + 實地路程與環保點數
                 if (window.EsgStats) {
-                    window.EsgStats.recordMissionCompletion('dawn', {
+                    rating = window.EsgStats.recordMissionCompletion('dawn', {
                         notesAdded: 1,
                         askRating: true
-                    });
+                    }) || '';
                 }
                 // 更新 TravelerStore 的任務完成資料
                 if (window.TravelerStore) {
@@ -79,6 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             }
+        }
+
+        if (window.SheetSync) {
+            window.SheetSync.send(note, { rating: rating });
         }
 
         // 顯示成功訊息

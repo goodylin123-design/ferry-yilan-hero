@@ -517,15 +517,12 @@ elements.btnSaveNote?.addEventListener('click', () => {
     notes.unshift(note); // 新增到最前面
     localStorage.setItem('whisperNotes', JSON.stringify(notes));
 
-    if (window.SheetSync) {
-        window.SheetSync.send(note);
-    }
-
     // 同步寫入 TravelerStore 的心靈筆記資料結構
     if (window.TravelerStore) {
         window.TravelerStore.recordMindNote(note);
     }
-    
+
+    let rating = '';
     // 標記第一關任務為完成（如果是在 wave.html 頁面）
     if (window.location.pathname.includes('wave.html') && window.TaskProgress) {
         const completed = window.TaskProgress.completeTask('wave');
@@ -533,10 +530,10 @@ elements.btnSaveNote?.addEventListener('click', () => {
             window.TaskProgress.showTaskCompleteNotification('wave');
             // 更新 ESG 統計：完成次數 + 筆記數 + 自評分數 + 實地路程與環保點數
             if (window.EsgStats) {
-                window.EsgStats.recordMissionCompletion('wave', {
+                rating = window.EsgStats.recordMissionCompletion('wave', {
                     notesAdded: 1,
                     askRating: true
-                });
+                }) || '';
             }
             // 更新 TravelerStore 的任務完成資料
             if (window.TravelerStore) {
@@ -545,6 +542,13 @@ elements.btnSaveNote?.addEventListener('click', () => {
                 });
             }
         }
+    }
+
+    if (window.SheetSync) {
+        window.SheetSync.send(note, {
+            rating: rating,
+            audioBlob: whisperState.recordedAudio || null
+        });
     }
     
     // 使用更溫暖的提示
