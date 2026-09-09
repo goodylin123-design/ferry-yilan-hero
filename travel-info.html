@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="蘭陽海岸旅行資訊：食、醫、住、行、育、樂、保險、通訊、上網等完整指南">
+    <title>旅行資訊指南 - 擺渡蘭陽英雄之旅</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ocean-background" aria-hidden="true">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    
+    <div class="coastline" aria-hidden="true">
+        <div class="dune dune-front"></div>
+        <div class="dune dune-mid"></div>
+        <div class="dune dune-back"></div>
+        <div class="coastline-highlight"></div>
+    </div>
+    
+    <div class="container">
+        <!-- 語言選擇器 -->
+        <div class="language-selector" id="language-selector">
+            <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="選擇語言">
+                <span class="lang-icon">🌐</span>
+                <span class="lang-current" id="lang-current">繁體中文</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown" style="display: none;">
+                <button type="button" class="lang-option" data-lang="zh-TW">繁體中文</button>
+                <button type="button" class="lang-option" data-lang="zh-CN">简体中文</button>
+                <button type="button" class="lang-option" data-lang="en">English</button>
+                <button type="button" class="lang-option" data-lang="ja">日本語</button>
+                <button type="button" class="lang-option" data-lang="ko">한국어</button>
+            </div>
+        </div>
+        
+        <header class="header">
+            <a href="app.html" class="back-link" data-i18n="backToHome">← 返回英雄之旅首頁</a>
+            <h1 class="title" data-i18n="travelInfoTitle">📋 旅行資訊指南</h1>
+            <p class="subtitle" data-i18n="travelInfoSubtitle">蘭陽海岸・完整旅行資訊</p>
+        </header>
+        
+        <main id="main-content" class="content">
+            <!-- 食 -->
+            <section class="card" aria-labelledby="food-title">
+                <h2 id="food-title" data-i18n="food">🍽️ 食</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="foodStore1Name">頭城老街</h3>
+                        <p data-i18n="foodStore1Location">📍 頭城鎮和平街</p>
+                        <p data-i18n="foodStore1Desc">傳統小吃、海鮮料理、在地特產</p>
+                        <p data-i18n="foodStore1Hours">🕐 營業時間：10:00-20:00</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="foodStore2Name">壯圍海鮮餐廳</h3>
+                        <p data-i18n="foodStore2Location">📍 壯圍鄉壯濱路</p>
+                        <p data-i18n="foodStore2Desc">新鮮海產、在地漁獲</p>
+                        <p data-i18n="foodStore2Hours">🕐 營業時間：11:00-21:00</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="foodStore3Name">蘇澳漁港</h3>
+                        <p data-i18n="foodStore3Location">📍 蘇澳鎮漁港路</p>
+                        <p data-i18n="foodStore3Desc">海鮮市場、現撈海產、小吃攤</p>
+                        <p data-i18n="foodStore3Hours">🕐 營業時間：06:00-18:00</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 醫 -->
+            <section class="card" aria-labelledby="medical-title">
+                <h2 id="medical-title" data-i18n="medical">🏥 醫</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="medicalClinic1Name">頭城鎮衛生所</h3>
+                        <p data-i18n="medicalClinic1Location">📍 頭城鎮開蘭路 123 號</p>
+                        <p data-i18n="medicalClinic1Phone">☎️ 03-977-1234</p>
+                        <p data-i18n="medicalClinic1Hours">🕐 週一至週五 08:00-17:00</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="medicalHospital1Name">羅東博愛醫院</h3>
+                        <p data-i18n="medicalHospital1Location">📍 羅東鎮南昌街 83 號</p>
+                        <p data-i18n="medicalHospital1Phone">☎️ 03-954-3131（急診 24 小時）</p>
+                        <p data-i18n="medicalHospital1Hours">🕐 24 小時急診服務</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="medicalHospital2Name">蘇澳榮民醫院</h3>
+                        <p data-i18n="medicalHospital2Location">📍 蘇澳鎮蘇濱路一段 301 號</p>
+                        <p data-i18n="medicalHospital2Phone">☎️ 03-990-5106</p>
+                        <p data-i18n="medicalHospital2Hours">🕐 24 小時急診服務</p>
+                    </div>
+                    <div class="info-item emergency">
+                        <h3 data-i18n="medicalEmergency">🚨 緊急醫療</h3>
+                        <p data-i18n="medicalEmergencyAmbulance">📞 119 救護車</p>
+                        <p data-i18n="medicalEmergencyPolice">📞 110 報案專線</p>
+                        <p data-i18n="medicalEmergencyHealth">📞 1922 防疫專線</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 住 -->
+            <section class="card" aria-labelledby="accommodation-title">
+                <h2 id="accommodation-title" data-i18n="accommodation">🏨 住</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="accommodation1Name">頭城海景民宿</h3>
+                        <p data-i18n="accommodation1Location">📍 頭城鎮濱海路</p>
+                        <p data-i18n="accommodation1Phone">☎️ 03-977-XXXX</p>
+                        <p data-i18n="accommodation1Price">💰 價格：NT$ 1,500-3,000/晚</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="accommodation2Name">壯圍沙丘旅館</h3>
+                        <p data-i18n="accommodation2Location">📍 壯圍鄉壯濱路</p>
+                        <p data-i18n="accommodation2Phone">☎️ 03-938-XXXX</p>
+                        <p data-i18n="accommodation2Price">💰 價格：NT$ 2,000-4,000/晚</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="accommodation3Name">蘇澳溫泉飯店</h3>
+                        <p data-i18n="accommodation3Location">📍 蘇澳鎮冷泉路</p>
+                        <p data-i18n="accommodation3Phone">☎️ 03-996-XXXX</p>
+                        <p data-i18n="accommodation3Price">💰 價格：NT$ 3,000-6,000/晚</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 行 -->
+            <section class="card" aria-labelledby="transport-title">
+                <h2 id="transport-title" data-i18n="transport">🚗 行</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="transportPublic">大眾運輸</h3>
+                        <p data-i18n="transportTRA">🚄 台鐵：頭城站、羅東站、蘇澳站</p>
+                        <p data-i18n="transportKuoKuang">🚌 國光客運：台北-頭城-蘇澳</p>
+                        <p data-i18n="transportYilanBus">🚌 宜蘭客運：市區公車路線</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="transportRental">租車服務</h3>
+                        <p data-i18n="transportRentalToucheng">🚗 頭城租車：03-977-XXXX</p>
+                        <p data-i18n="transportRentalLuodong">🚗 羅東租車：03-954-XXXX</p>
+                        <p data-i18n="transportRentalPrice">💰 價格：NT$ 1,500-3,000/天</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="transportTaxi">計程車</h3>
+                        <p data-i18n="transportTaxiToucheng">📞 頭城計程車：03-977-XXXX</p>
+                        <p data-i18n="transportTaxiLuodong">📞 羅東計程車：03-954-XXXX</p>
+                        <p data-i18n="transportTaxiStart">💰 起跳：NT$ 100</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 育 -->
+            <section class="card" aria-labelledby="education-title">
+                <h2 id="education-title" data-i18n="education">📚 育</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="education1Name">蘭陽博物館</h3>
+                        <p data-i18n="education1Location">📍 頭城鎮青雲路三段 750 號</p>
+                        <p data-i18n="education1Hours">🕐 09:00-17:00（週三休館）</p>
+                        <p data-i18n="education1Price">💰 門票：NT$ 100</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="education2Name">壯圍沙丘生態園區</h3>
+                        <p data-i18n="education2Location">📍 壯圍鄉壯濱路二段</p>
+                        <p data-i18n="education2Hours">🕐 08:00-18:00</p>
+                        <p data-i18n="education2Price">💰 免費參觀</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="education3Name">蘇澳冷泉公園</h3>
+                        <p data-i18n="education3Location">📍 蘇澳鎮冷泉路</p>
+                        <p data-i18n="education3Hours">🕐 08:00-22:00</p>
+                        <p data-i18n="education3Price">💰 門票：NT$ 70</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 樂 -->
+            <section class="card" aria-labelledby="entertainment-title">
+                <h2 id="entertainment-title" data-i18n="entertainment">🎉 樂</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="entertainment1Name">蜜月灣衝浪</h3>
+                        <p data-i18n="entertainment1Location">📍 頭城鎮外澳海灘</p>
+                        <p data-i18n="entertainment1Desc">🏄 衝浪教學、租板服務</p>
+                        <p data-i18n="entertainment1Price">💰 租板：NT$ 500-800/天</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="entertainment2Name">龜山島登島</h3>
+                        <p data-i18n="entertainment2Location">📍 頭城鎮烏石港</p>
+                        <p data-i18n="entertainment2Desc">🚢 登島船班、賞鯨行程</p>
+                        <p data-i18n="entertainment2Price">💰 船票：NT$ 1,200-1,800</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="entertainment3Name">情人灣日出</h3>
+                        <p data-i18n="entertainment3Location">📍 蘇澳鎮南方澳</p>
+                        <p data-i18n="entertainment3Desc">🌅 最佳觀賞時間：05:00-06:30</p>
+                        <p data-i18n="entertainment3Price">💰 免費</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 保險 -->
+            <section class="card" aria-labelledby="insurance-title">
+                <h2 id="insurance-title" data-i18n="insurance">🛡️ 保險</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="insurance1Name">旅遊平安險</h3>
+                        <p data-i18n="insurance1Desc">📱 線上投保：各保險公司官網</p>
+                        <p data-i18n="insurance1Price">💰 價格：NT$ 100-500/天</p>
+                        <p data-i18n="insurance1Service">📞 24 小時客服專線</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="insurance2Name">健保卡</h3>
+                        <p data-i18n="insurance2Desc">🏥 攜帶健保卡，就醫可享健保給付</p>
+                        <p data-i18n="insurance2Phone">📞 健保諮詢：0800-030-598</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="insurance3Name">緊急聯絡資訊</h3>
+                        <p data-i18n="insurance3Desc">📞 緊急聯絡人：請設定親友電話</p>
+                        <p data-i18n="insurance3Phone">📞 駐外單位：外交部 0800-085-095</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 通訊 -->
+            <section class="card" aria-labelledby="communication-title">
+                <h2 id="communication-title" data-i18n="communication">📞 通訊</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="communication1Name">電信服務</h3>
+                        <p data-i18n="communication1Tel1">📱 中華電信：03-977-XXXX</p>
+                        <p data-i18n="communication1Tel2">📱 台灣大哥大：03-977-XXXX</p>
+                        <p data-i18n="communication1Tel3">📱 遠傳電信：03-977-XXXX</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="communication2Name">郵局</h3>
+                        <p data-i18n="communication2Location1">📍 頭城郵局：頭城鎮開蘭路</p>
+                        <p data-i18n="communication2Location2">📍 羅東郵局：羅東鎮中正路</p>
+                        <p data-i18n="communication2Hours">🕐 週一至週五 08:00-17:00</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="communication3Name">緊急電話</h3>
+                        <p data-i18n="communication3Phone1">📞 110 報案專線</p>
+                        <p data-i18n="communication3Phone2">📞 119 救護車</p>
+                        <p data-i18n="communication3Phone3">📞 113 婦幼保護專線</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 上網 -->
+            <section class="card" aria-labelledby="internet-title">
+                <h2 id="internet-title" data-i18n="internet">🌐 上網</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <h3 data-i18n="internet1Name">免費 WiFi</h3>
+                        <p data-i18n="internet1WiFi1">📶 iTaiwan 免費 WiFi</p>
+                        <p data-i18n="internet1WiFi2">📶 宜蘭縣政府 WiFi</p>
+                        <p data-i18n="internet1Location">📍 主要景點、車站、公家機關</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="internet2Name">行動網路</h3>
+                        <p data-i18n="internet2Desc1">📱 4G/5G 訊號覆蓋良好</p>
+                        <p data-i18n="internet2Desc2">📱 主要電信商皆有服務</p>
+                        <p data-i18n="internet2Desc3">⚠️ 部分山區訊號較弱</p>
+                    </div>
+                    <div class="info-item">
+                        <h3 data-i18n="internet3Name">網路咖啡廳</h3>
+                        <p data-i18n="internet3Location1">📍 頭城鎮：開蘭路沿線</p>
+                        <p data-i18n="internet3Location2">📍 羅東鎮：中正路、民權路</p>
+                        <p data-i18n="internet3Price">💰 價格：NT$ 50-100/小時</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="i18n.js"></script>
+    <script src="task-progress.js"></script>
+    <script src="traveler-store.js"></script>
+    <script src="index-i18n.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var back = document.querySelector('.back-link');
+            if (back && back.getAttribute('href') === 'app.html') {
+                back.href = new URL('app.html', window.location.href).href;
+            }
+        });
+    </script>
+</body>
+</html>
+

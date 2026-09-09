@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="擺渡蘭陽英雄之旅 - 實體互動路線規劃">
+    <title>🗺️ 英雄旅程路線 - 擺渡蘭陽</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .route-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .route-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .route-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .route-step-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid rgba(56, 189, 248, 0.2);
+            position: relative;
+        }
+        
+        .route-step-number {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .route-step-title {
+            font-size: 1.3rem;
+            color: #0F172A;
+            margin: 15px 0 10px 0;
+            font-weight: 700;
+        }
+        
+        .route-step-location {
+            color: #3B82F6;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .route-step-description {
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .route-step-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-route-action {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-navigate {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+        }
+        
+        .btn-navigate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-start-task {
+            background: linear-gradient(135deg, #3B82F6, #2563EB);
+            color: white;
+        }
+        
+        .btn-start-task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        .route-summary {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.05));
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid rgba(56, 189, 248, 0.2);
+        }
+        
+        .route-summary h3 {
+            color: #0F172A;
+            margin-bottom: 15px;
+        }
+        
+        .route-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .route-info-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .route-info-label {
+            color: #64748B;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .route-info-value {
+            color: #0F172A;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            border: 2px solid rgba(56, 189, 248, 0.2);
+        }
+        
+        .route-tips {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .route-tips h4 {
+            color: #92400E;
+            margin-bottom: 10px;
+        }
+        
+        .route-tips ul {
+            color: #92400E;
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .route-tips li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean-background" aria-hidden="true">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    
+    <div class="coastline" aria-hidden="true">
+        <div class="dune dune-front"></div>
+        <div class="dune dune-mid"></div>
+        <div class="dune dune-back"></div>
+        <div class="coastline-highlight"></div>
+    </div>
+    
+    <div class="container">
+        <!-- 語言選擇器 -->
+        <div class="language-selector" id="language-selector">
+            <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="選擇語言">
+                <span class="lang-icon">🌐</span>
+                <span class="lang-current" id="lang-current">繁體中文</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown" style="display: none;">
+                <button type="button" class="lang-option" data-lang="zh-TW">繁體中文</button>
+                <button type="button" class="lang-option" data-lang="zh-CN">简体中文</button>
+                <button type="button" class="lang-option" data-lang="en">English</button>
+                <button type="button" class="lang-option" data-lang="ja">日本語</button>
+                <button type="button" class="lang-option" data-lang="ko">한국어</button>
+            </div>
+        </div>
+        
+        <header class="header">
+            <a href="app.html" class="back-link" data-i18n="backToHome">← 返回英雄之旅首頁</a>
+            <h1 class="title" data-i18n="routeTitle">🗺️ 英雄旅程路線</h1>
+            <p class="subtitle" data-i18n="routeSubtitle">擺渡蘭陽・實體互動路線</p>
+        </header>
+        
+        <main class="content">
+            <div class="route-container">
+                <!-- 路線摘要 -->
+                <section class="route-summary">
+                    <h3 data-i18n="routeInfo">📊 路線資訊</h3>
+                    <div class="route-info">
+                        <div class="route-info-item">
+                            <div class="route-info-label" data-i18n="routeTotalDistance">總距離</div>
+                            <div class="route-info-value" id="total-distance" data-i18n="routeDistanceValue">約 45 公里</div>
+                        </div>
+                        <div class="route-info-item">
+                            <div class="route-info-label" data-i18n="routeEstimatedTime">預計時間</div>
+                            <div class="route-info-value" id="total-time" data-i18n="routeTimeValue">約 1.5 小時</div>
+                        </div>
+                        <div class="route-info-item">
+                            <div class="route-info-label" data-i18n="routeMissionStops">任務站點</div>
+                            <div class="route-info-value" data-i18n="routeStopsValue">10 個</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 路線提示 -->
+                <section class="route-tips">
+                    <h4 data-i18n="routeTips">💡 路線提示</h4>
+                    <ul>
+                        <li data-i18n="routeTip1">建議使用 Google Maps 或 Apple Maps 進行導航</li>
+                        <li data-i18n="routeTip2">每個任務站點需要完成對應任務才能解鎖下一關</li>
+                        <li data-i18n="routeTip3">建議攜帶充電寶，確保手機電量充足</li>
+                        <li data-i18n="routeTip4">注意交通安全，建議使用大眾運輸或共乘</li>
+                        <li data-i18n="routeTip5">到達每個站點後，系統會自動檢查 GPS 位置（50 公尺範圍內）</li>
+                    </ul>
+                </section>
+                
+                <!-- 地圖容器 -->
+                <section class="map-container" id="map-container">
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #E0F2FE; color: #475569;">
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">🗺️</div>
+                            <h3 style="color: #0F172A; margin-bottom: 10px;" data-i18n="interactiveMap">互動地圖</h3>
+                            <p style="color: #64748B; margin-bottom: 20px;" data-i18n="openGoogleMaps">點擊下方按鈕開啟 Google Maps 查看完整路線</p>
+                            <a href="https://www.google.com/maps/dir/24.9336,121.8858/24.8230,121.7025/24.7020,121.8363/24.7372,121.8201/24.7172,121.8270/24.6632,121.8178/24.6866,121.8241/24.6678,121.8385/24.6141,121.8539/24.5774,121.8708" 
+                               target="_blank" 
+                               style="display: inline-block; padding: 12px 25px; background: linear-gradient(135deg, #3B82F6, #2563EB); color: white; border-radius: 25px; text-decoration: none; font-weight: 600;"
+                               data-i18n="btnOpenGoogleMaps">
+                                🧭 開啟 Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- 十關路線步驟 -->
+                <section class="route-steps">
+                    <!-- 第一關：蜜月灣 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">1</div>
+                        <div class="route-step-title" data-i18n="routeStep1Title">🌊 第一關：海風中的呢喃</div>
+                        <div class="route-step-location" data-i18n="routeStep1Location">📍 蜜月灣</div>
+                        <div class="route-step-description" data-i18n="routeStep1Desc">在頭城蜜月灣的海邊靜坐，遠眺龜山島，閉上眼睛，聽著海浪的聲音。讓 AI 引導你與內心對話。</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.9336,121.8858" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="wave.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第二關：礁溪櫻花陵園 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">2</div>
+                        <div class="route-step-title" data-i18n="routeStep2Title">🌧 第二關：山風拂面</div>
+                        <div class="route-step-location" data-i18n="routeStep2Location">📍 礁溪櫻花陵園</div>
+                        <div class="route-step-description" data-i18n="routeStep2Desc">行走在礁溪櫻花陵園的坡道間，感受山風輕掃臉頰、拂過樹梢。AI 會引導你思考：這股風來自何方？在你的人生中，有什麼力量推動著你前行？</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.8230,121.7025" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="rain.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第三關：三敆水 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">3</div>
+                        <div class="route-step-title" data-i18n="routeStep3Title">🌅 第三關：沙丘上的腳印</div>
+                        <div class="route-step-location" data-i18n="routeStep3Location">📍 三敆水</div>
+                        <div class="route-step-description" data-i18n="routeStep3Desc">AI 會引導你來到三敆水一帶的沙丘上緩慢行走，觀看自己在沙面上留下的一串串腳印。這些腳印代表著你走過的過去經歷，也象徵著「腳印最終會被風沙抹去」，而我們的過去是否也能被重新理解與安放？</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.7020,121.8363" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="dawn.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第四關：壯圍沙丘生態園區 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">4</div>
+                        <div class="route-step-title" data-i18n="routeStep4Title">🌍 第四關：大地的擁抱</div>
+                        <div class="route-step-location" data-i18n="routeStep4Location">📍 壯圍沙丘生態園區</div>
+                        <div class="route-step-description" data-i18n="routeStep4Desc">在壯圍沙丘生態園區，旅行者可以坐在沙丘上，用雙手觸摸沙粒，感受沙的溫度與質地。AI 會引導你思考：大地如何支撐著我們？在你的生命中，誰是你的「大地」？</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.7372,121.8201" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="mission4.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第五關：榕樹公園 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">5</div>
+                        <div class="route-step-title" data-i18n="routeStep5Title">⭐ 第五關：星空下的祈願</div>
+                        <div class="route-step-location" data-i18n="routeStep5Location">📍 榕樹公園</div>
+                        <div class="route-step-description" data-i18n="routeStep5Desc">在榕樹公園的夜晚，旅行者可以躺在吊床上，仰望星空。AI 會引導你進行一分鐘的靜默冥想，之後寫下你的願望或期許。</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.7172,121.8270" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="mission5.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第六關：五十二甲溼地 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">6</div>
+                        <div class="route-step-title" data-i18n="routeStep6Title">🌾 第六關：風中的聲音</div>
+                        <div class="route-step-location" data-i18n="routeStep6Location">📍 五十二甲溼地</div>
+                        <div class="route-step-description" data-i18n="routeStep6Desc">在五十二甲溼地，旅行者可以騎著單車沿著小徑，享受稻田的香氣。AI 會引導你：你是否聽到風中的聲音？這聲音如何讓你聯想到你自己的生命？</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.6632,121.8178" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="mission6.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第七關：傳藝中心 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">7</div>
+                        <div class="route-step-title" data-i18n="routeStep7Title">🍂 第七關：拾起一片落葉</div>
+                        <div class="route-step-location" data-i18n="routeStep7Location">📍 傳藝中心</div>
+                        <div class="route-step-description" data-i18n="routeStep7Desc">在傳藝中心的小徑上，旅行者會被 AI 引導撿起一片落葉，並反思：這片葉子曾經是樹的一部分，現在它自由了。你需要放下什麼？</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.6866,121.8241" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="mission7.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第八關：利澤簡 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">8</div>
+                        <div class="route-step-title" data-i18n="routeStep8Title">🌊 第八關：河流中的倒影</div>
+                        <div class="route-step-location" data-i18n="routeStep8Location">📍 利澤簡</div>
+                        <div class="route-step-description" data-i18n="routeStep8Desc">在利澤簡的河邊，旅行者會被 AI 引導觀察自己的倒影，並思考：這是現在的自己，還是過去的自己？旅行者可以拍下自己的倒影，並記錄感受。</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.6678,121.8385" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="mission8.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第九關：無尾港 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">9</div>
+                        <div class="route-step-title" data-i18n="routeStep9Title">🌊 第九關：拍打海浪的節奏</div>
+                        <div class="route-step-location" data-i18n="routeStep9Location">📍 無尾港</div>
+                        <div class="route-step-description" data-i18n="routeStep9Desc">在無尾港的海灘，旅行者會被 AI 引導跟著海浪的節奏自由舞動，體驗自然的節奏。旅行者可以錄下自己的動作或感受，並保存。</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.6141,121.8539" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="mission9.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                    
+                    <!-- 第十關：內埤情人灣 -->
+                    <article class="route-step-card">
+                        <div class="route-step-number">10</div>
+                        <div class="route-step-title" data-i18n="routeStep10Title">🌅 第十關：自然中的告別儀式</div>
+                        <div class="route-step-location" data-i18n="routeStep10Location">📍 內埤情人灣</div>
+                        <div class="route-step-description" data-i18n="routeStep10Desc">在內埤情人灣，這是旅程的最後一站。旅行者會被 AI 引導在葉子上寫下過去的擔憂與遺憾，然後將葉子放入海中，讓海浪帶走。這象徵著放下過去，迎接未來的自由。</div>
+                        <div class="route-step-actions">
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=24.5774,121.8708" target="_blank" class="btn-route-action btn-navigate" data-i18n="btnNavigate">🧭 導航前往</a>
+                            <a href="mission10.html" class="btn-route-action btn-start-task" data-i18n="btnStartTask">🚀 開始任務</a>
+                        </div>
+                    </article>
+                </section>
+                
+                <!-- 完整路線導航 -->
+                <section class="card">
+                    <h3 data-i18n="routeFullNavigation">🗺️ 完整路線導航</h3>
+                    <p style="margin-bottom: 20px;" data-i18n="routeFullNavigationDesc">點擊下方按鈕開啟 Google Maps 完整路線規劃：</p>
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <a href="https://www.google.com/maps/dir/24.938746,121.889067/24.835611,121.760944/24.702000,121.836300/24.744176,121.822689/24.767120,121.812450/24.685900,121.790200/24.686596,121.824067/24.673500,121.818200/24.657300,121.835700/24.582600,121.866000" 
+                           target="_blank" 
+                           class="btn btn-primary"
+                           style="text-decoration: none; display: inline-block;">
+                            <span class="btn-text" data-i18n="routeOpenFullRouteGoogle">🧭 開啟完整路線（Google Maps）</span>
+                        </a>
+                        <a href="https://maps.apple.com/?daddr=24.9336,121.8858&daddr=24.8230,121.7025&daddr=24.7020,121.8363&daddr=24.7372,121.8201&daddr=24.7172,121.8270&daddr=24.6632,121.8178&daddr=24.6866,121.8241&daddr=24.6678,121.8385&daddr=24.6141,121.8539&daddr=24.5774,121.8708" 
+                           target="_blank" 
+                           class="btn btn-secondary"
+                           style="text-decoration: none; display: inline-block;">
+                            <span class="btn-text" data-i18n="routeOpenFullRouteApple">🍎 開啟完整路線（Apple Maps）</span>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script src="i18n.js"></script>
+    <script src="task-progress.js"></script>
+    <script src="index-i18n.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var back = document.querySelector('.back-link');
+            if (back && back.getAttribute('href') === 'app.html') {
+                back.href = new URL('app.html', window.location.href).href;
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="2026年壯圍沙丘地景藝術生活節節目表">
+    <title>2026年壯圍沙丘地景藝術生活節節目表</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .festival-landing {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .festival-landing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            opacity: 0.3;
+        }
+        
+        .festival-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+        
+        .festival-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .festival-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        
+        .festival-subtitle {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+        }
+        
+        .festival-year {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .program-schedule {
+            margin-bottom: 40px;
+        }
+        
+        .schedule-section {
+            margin-bottom: 30px;
+        }
+        
+        .schedule-date {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .schedule-item {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .schedule-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        
+        .schedule-time {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .schedule-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 5px;
+        }
+        
+        .schedule-location {
+            font-size: 0.95rem;
+            color: #718096;
+            margin-bottom: 5px;
+        }
+        
+        .schedule-description {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+        
+        .enter-button-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .enter-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 50px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .enter-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .enter-button:active {
+            transform: translateY(0);
+        }
+        
+        .enter-button-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .festival-container {
+                padding: 25px 20px;
+            }
+            
+            .festival-title {
+                font-size: 1.8rem;
+            }
+            
+            .festival-subtitle {
+                font-size: 1rem;
+            }
+            
+            .schedule-date {
+                font-size: 1.3rem;
+            }
+            
+            .schedule-item {
+                padding: 15px;
+            }
+            
+            .schedule-time {
+                font-size: 1rem;
+            }
+            
+            .schedule-title {
+                font-size: 1.1rem;
+            }
+            
+            .enter-button {
+                padding: 15px 40px;
+                font-size: 1.1rem;
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="festival-landing">
+        <div class="festival-container">
+            <div class="festival-header">
+                <h1 class="festival-title">2026年壯圍沙丘地景藝術生活節</h1>
+                <p class="festival-subtitle">節目表</p>
+                <span class="festival-year">2026</span>
+            </div>
+            
+            <div class="program-schedule">
+                <!-- 第一天 -->
+                <div class="schedule-section">
+                    <h2 class="schedule-date">第一天 | 開幕日</h2>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">09:00 - 10:00</div>
+                        <div class="schedule-title">開幕儀式</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 主舞台</div>
+                        <div class="schedule-description">歡迎所有參與者，介紹本屆藝術生活節主題與特色</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">10:00 - 12:00</div>
+                        <div class="schedule-title">地景藝術導覽</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區</div>
+                        <div class="schedule-description">專業導覽員帶領參觀本屆地景藝術作品，深入了解創作理念</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">14:00 - 16:00</div>
+                        <div class="schedule-title">沙丘創作工作坊</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 工作坊區</div>
+                        <div class="schedule-description">親手體驗沙丘藝術創作，感受大地與藝術的結合</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">16:00 - 18:00</div>
+                        <div class="schedule-title">音樂表演</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 主舞台</div>
+                        <div class="schedule-description">在地音樂家現場演出，用音樂詮釋沙丘之美</div>
+                    </div>
+                </div>
+                
+                <!-- 第二天 -->
+                <div class="schedule-section">
+                    <h2 class="schedule-date">第二天 | 深度體驗</h2>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">09:00 - 11:00</div>
+                        <div class="schedule-title">生態導覽</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區</div>
+                        <div class="schedule-description">探索沙丘生態系統，認識在地動植物與環境</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">11:00 - 13:00</div>
+                        <div class="schedule-title">在地美食市集</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 市集區</div>
+                        <div class="schedule-description">品嚐宜蘭在地特色美食，支持在地小農與商家</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">14:00 - 17:00</div>
+                        <div class="schedule-title">藝術家對談</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 講座區</div>
+                        <div class="schedule-description">與參展藝術家面對面交流，分享創作歷程與靈感</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">18:00 - 20:00</div>
+                        <div class="schedule-title">夕陽音樂會</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 主舞台</div>
+                        <div class="schedule-description">在沙丘上欣賞夕陽，伴隨現場音樂享受美好時光</div>
+                    </div>
+                </div>
+                
+                <!-- 第三天 -->
+                <div class="schedule-section">
+                    <h2 class="schedule-date">第三天 | 閉幕日</h2>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">09:00 - 12:00</div>
+                        <div class="schedule-title">親子沙丘體驗</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區</div>
+                        <div class="schedule-description">適合親子參與的沙丘探索活動，讓孩子親近自然</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">14:00 - 16:00</div>
+                        <div class="schedule-title">閉幕表演</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 主舞台</div>
+                        <div class="schedule-description">精彩閉幕演出，為本屆藝術生活節畫下完美句點</div>
+                    </div>
+                    
+                    <div class="schedule-item">
+                        <div class="schedule-time">16:00 - 17:00</div>
+                        <div class="schedule-title">閉幕儀式</div>
+                        <div class="schedule-location">📍 壯圍沙丘生態園區 主舞台</div>
+                        <div class="schedule-description">感謝所有參與者，期待明年再相會</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="enter-button-container">
+                <a href="app.html" class="enter-button">
+                    <span class="enter-button-text">
+                        <span>🌊</span>
+                        <span>進入「擺渡蘭陽英雄之旅」</span>
+                        <span>→</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

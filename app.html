@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="" id="meta-description">
+    <title id="page-title">🌊 擺渡蘭陽英雄之旅</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ocean-background" aria-hidden="true">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    
+    <!-- 海岸與沙丘前景（純裝飾用） -->
+    <div class="coastline" aria-hidden="true">
+        <div class="dune dune-front"></div>
+        <div class="dune dune-mid"></div>
+        <div class="dune dune-back"></div>
+        <div class="coastline-highlight"></div>
+    </div>
+    
+    <div class="container">
+        <!-- 語言選擇器 -->
+        <div class="language-selector" id="language-selector">
+            <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="" data-i18n-aria-label="selectLanguage">
+                <span class="lang-icon">🌐</span>
+                <span class="lang-current" id="lang-current">繁體中文</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown" style="display: none;">
+                <button type="button" class="lang-option" data-lang="zh-TW">繁體中文</button>
+                <button type="button" class="lang-option" data-lang="zh-CN">简体中文</button>
+                <button type="button" class="lang-option" data-lang="en">English</button>
+                <button type="button" class="lang-option" data-lang="ja">日本語</button>
+                <button type="button" class="lang-option" data-lang="ko">한국어</button>
+            </div>
+        </div>
+        
+        <header class="header">
+            <h1 class="title" data-i18n="title">🌊 擺渡蘭陽英雄之旅</h1>
+            <p class="subtitle" data-i18n="subtitle">蘭陽海岸・內在成長型十關英雄旅程</p>
+            <p class="hero-guide-message" id="hero-guide-message"></p>
+        </header>
+        
+        <main id="main-content" class="content">
+            <section class="card" aria-labelledby="hero-title">
+                <h2 id="hero-title" data-i18n="heroTitle">內在成長型十關英雄旅程（宜蘭海岸）</h2>
+                <p data-i18n="heroDescription">沿著蜜月灣到情人灣的海線，讓心跳與海風同步，一關一關長出新的自己。</p>
+                
+                <ol class="journey-steps">
+                    <li><strong data-i18n="mission1Title">第一關｜啟程：蜜月灣海灘</strong> — <span data-i18n="mission1Desc">找到你的「出航理由」，寫下此刻的勇氣宣言。</span></li>
+                    <li><strong data-i18n="mission2Title">第二關｜山風拂面（礁溪櫻花陵園）</strong> — <span data-i18n="mission2Desc">在山風與櫻花間，整理過去的壓力與掛念。</span></li>
+                    <li><strong data-i18n="mission3Title">第三關｜沙丘上的腳印（三敆水）</strong> — <span data-i18n="mission3Desc">走在沙丘上，回望自己走過的每一步。</span></li>
+                    <li><strong data-i18n="mission4Title">第四關｜大地的擁抱（壯圍沙丘生態園區）</strong> — <span data-i18n="mission4Desc">雙腳踩在沙上，感受大地給你的支持與安穩。</span></li>
+                    <li><strong data-i18n="mission5Title">第五關｜星空下的祈願（榕樹公園）</strong> — <span data-i18n="mission5Desc">仰望星空，寫下給未來自己的祈願。</span></li>
+                    <li><strong data-i18n="mission6Title">第六關｜風中的聲音（五十二甲溼地）</strong> — <span data-i18n="mission6Desc">在稻浪與海風吹拂下，聽見生命的變化。</span></li>
+                    <li><strong data-i18n="mission7Title">第七關｜拾起一片落葉（傳藝中心）</strong> — <span data-i18n="mission7Desc">撿起一片葉子，練習說出想放下的故事。</span></li>
+                    <li><strong data-i18n="mission8Title">第八關｜河流中的倒影（利澤簡）</strong> — <span data-i18n="mission8Desc">看著河水中的倒影，辨認此刻與過去的自己。</span></li>
+                    <li><strong data-i18n="mission9Title">第九關｜拍打海浪的節奏（無尾港）</strong> — <span data-i18n="mission9Desc">跟著海浪的節奏，自由地舞動與釋放情緒。</span></li>
+                    <li><strong data-i18n="mission10Title">第十關｜自然中的告別儀式（內埤情人灣）</strong> — <span data-i18n="mission10Desc">在海邊完成一個告別儀式，向過去的自己道別。</span></li>
+                </ol>
+
+                <!-- 英雄任務選擇 -->
+                <section class="hero-missions" aria-label="" data-i18n-aria-label="ariaLabelChooseMission">
+                    <h3 class="hero-missions-title" data-i18n="chooseMission">選擇今天的英雄任務</h3>
+                    <p class="hero-missions-subtitle" data-i18n="chooseMissionSub">依照當下的狀態，挑一個任務，開始你的內在成長旅程。</p>
+
+                    <div class="hero-missions-buttons" id="mission-buttons">
+                        <a href="wave.html" class="mission-btn-link" data-task="wave">
+                            <button type="button" class="mission-btn" data-mission="wave">
+                                <span data-i18n="missionWave">🌊 海風中的呢喃任務</span>
+                                <span class="mission-location" data-i18n="missionWaveLoc">📍 蜜月灣</span>
+                                <span class="mission-status" id="status-wave"></span>
+                            </button>
+                        </a>
+                        <a href="rain.html" class="mission-btn-link" data-task="rain">
+                            <button type="button" class="mission-btn" data-mission="rain">
+                                <span data-i18n="missionRain">🌧 山風拂面任務</span>
+                                <span class="mission-location" data-i18n="missionRainLoc">📍 礁溪櫻花陵園</span>
+                                <span class="mission-status" id="status-rain"></span>
+                            </button>
+                        </a>
+                        <a href="dawn.html" class="mission-btn-link" data-task="dawn">
+                            <button type="button" class="mission-btn" data-mission="dawn">
+                                <span data-i18n="missionDawn">🌅 沙丘上的腳印任務</span>
+                                <span class="mission-location" data-i18n="missionDawnLoc">📍 三敆水</span>
+                                <span class="mission-status" id="status-dawn"></span>
+                            </button>
+                        </a>
+                        <!-- 第四關到第十關 -->
+                        <a href="mission4.html" class="mission-btn-link" data-task="mission4">
+                            <button type="button" class="mission-btn" data-mission="mission4">
+                                <span data-i18n="mission4">🌍 大地的擁抱任務</span>
+                                <span class="mission-location" data-i18n="mission4Loc">📍 壯圍沙丘生態園區</span>
+                                <span class="mission-status" id="status-mission4"></span>
+                            </button>
+                        </a>
+                        <a href="mission5.html" class="mission-btn-link" data-task="mission5">
+                            <button type="button" class="mission-btn" data-mission="mission5">
+                                <span data-i18n="mission5">⭐ 星空下的祈願任務</span>
+                                <span class="mission-location" data-i18n="mission5Loc">📍 榕樹公園</span>
+                                <span class="mission-status" id="status-mission5"></span>
+                            </button>
+                        </a>
+                        <a href="mission6.html" class="mission-btn-link" data-task="mission6">
+                            <button type="button" class="mission-btn" data-mission="mission6">
+                                <span data-i18n="mission6">🌾 風中的聲音任務</span>
+                                <span class="mission-location" data-i18n="mission6Loc">📍 五十二甲溼地</span>
+                                <span class="mission-status" id="status-mission6"></span>
+                            </button>
+                        </a>
+                        <a href="mission7.html" class="mission-btn-link" data-task="mission7">
+                            <button type="button" class="mission-btn" data-mission="mission7">
+                                <span data-i18n="mission7">🍂 拾起一片落葉任務</span>
+                                <span class="mission-location" data-i18n="mission7Loc">📍 傳藝中心</span>
+                                <span class="mission-status" id="status-mission7"></span>
+                            </button>
+                        </a>
+                        <a href="mission8.html" class="mission-btn-link" data-task="mission8">
+                            <button type="button" class="mission-btn" data-mission="mission8">
+                                <span data-i18n="mission8">🌊 河流中的倒影任務</span>
+                                <span class="mission-location" data-i18n="mission8Loc">📍 利澤簡</span>
+                                <span class="mission-status" id="status-mission8"></span>
+                            </button>
+                        </a>
+                        <a href="mission9.html" class="mission-btn-link" data-task="mission9">
+                            <button type="button" class="mission-btn" data-mission="mission9">
+                                <span data-i18n="mission9">🌊 拍打海浪的節奏任務</span>
+                                <span class="mission-location" data-i18n="mission9Loc">📍 無尾港</span>
+                                <span class="mission-status" id="status-mission9"></span>
+                            </button>
+                        </a>
+                        <a href="mission10.html" class="mission-btn-link" data-task="mission10">
+                            <button type="button" class="mission-btn" data-mission="mission10">
+                                <span data-i18n="mission10">🌅 自然中的告別儀式任務</span>
+                                <span class="mission-location" data-i18n="mission10Loc">📍 內埤情人灣</span>
+                                <span class="mission-status" id="status-mission10"></span>
+                            </button>
+                        </a>
+                    </div>
+                    
+                    <!-- 任務進度顯示 -->
+                    <div class="task-progress-display" id="task-progress-display">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar" id="progress-bar"></div>
+                        </div>
+                        <p class="progress-text" id="progress-text"></p>
+                    </div>
+
+                    <div class="qr-scan-section">
+                        <button type="button" class="btn-qr-scan" id="btn-scan-qr">
+                            <span data-i18n="btnScanQR">📷 掃描 QR 碼進入任務</span>
+                        </button>
+                        <div id="qr-reader" style="display: none; margin-top: 20px;"></div>
+                    </div>
+                </section>
+                
+                <div class="button-group">
+                    <a href="wave.html" class="btn-link">
+                        <button type="button" class="btn btn-primary">
+                            <span class="btn-text" data-i18n="btnStartMission1">🚢 開始第一關</span>
+                            <span class="btn-shine"></span>
+                        </button>
+                    </a>
+                    
+                    <a href="route.html" class="btn-link">
+                        <button type="button" class="btn btn-secondary">
+                            <span class="btn-text" data-i18n="btnViewRoute">🗺️ 查看路線</span>
+                            <span class="btn-shine"></span>
+                        </button>
+                    </a>
+                    
+                    <a href="music-player.html" class="btn-link">
+                        <button type="button" class="btn btn-adventure">
+                            <span class="btn-text" data-i18n="btnHeroMusic">🎵 英雄音樂</span>
+                            <span class="btn-shine"></span>
+                        </button>
+                    </a>
+                    
+                    <button type="button" class="btn btn-adventure" id="btn-view-notes">
+                        <span class="btn-text" data-i18n="btnMindNotes">📖 心靈筆記</span>
+                        <span class="btn-shine"></span>
+                    </button>
+                    
+                    <a href="travel-info.html" class="btn-link">
+                        <button type="button" class="btn btn-secondary">
+                            <span class="btn-text" data-i18n="btnTravelInfo">📋 旅行資訊</span>
+                        <span class="btn-shine"></span>
+                    </button>
+                    </a>
+                    
+                    <a href="points-redeem.html" class="btn-link">
+                        <button type="button" class="btn btn-adventure">
+                            <span class="btn-text" data-i18n="btnPointsRedeem">💚 點數兌換</span>
+                        <span class="btn-shine"></span>
+                    </button>
+                    </a>
+                </div>
+            </section>
+            
+            <!-- 旅人儀表板（測試版） -->
+            <section class="card traveler-dashboard" aria-label="" data-i18n-aria-label="ariaLabelDashboard">
+                <h2 data-i18n="dashboardTitle">旅人儀表板（測試版）</h2>
+                <p data-i18n="dashboardDesc">這是為了設計與展示而準備的統計區塊，會根據你在三關中的行為，慢慢長出屬於你的海岸旅程數據。</p>
+                <div class="traveler-stats-grid" id="traveler-stats">
+                    <div class="traveler-stat-card">
+                        <h3 data-i18n="statMissionCount">任務完成次數</h3>
+                        <p class="stat-number" id="stat-mission-count">–</p>
+                        <p class="stat-note" data-i18n="statMissionCountNote">你已完成的所有關卡總數</p>
+                    </div>
+                    <div class="traveler-stat-card">
+                        <h3 data-i18n="statNotesCount">心靈筆記數</h3>
+                        <p class="stat-number" id="stat-notes-count">–</p>
+                        <p class="stat-note" data-i18n="statNotesCountNote">寫下的所有內在感受與洞見</p>
+                    </div>
+                    <div class="traveler-stat-card">
+                        <h3 data-i18n="statDistance">累積步行里程</h3>
+                        <p class="stat-number" id="stat-distance-km">– km</p>
+                        <p class="stat-note" data-i18n="statDistanceNote">實地走過的海岸路程（估算）</p>
+                </div>
+                    <div class="traveler-stat-card">
+                        <h3 data-i18n="statPoints">環保點數</h3>
+                        <p class="stat-number" id="stat-env-points">– 點</p>
+                        <p class="stat-note" data-i18n="statPointsNote">未來可兌換或折抵的潛在積分</p>
+                </div>
+                </div>
+            </section>
+
+            <section class="features" aria-label="" data-i18n-aria-label="ariaLabelAdventure">
+                <article class="feature-card">
+                    <div class="feature-icon">🌊</div>
+                    <h3 data-i18n="feature1Title">啟程・蜜月灣</h3>
+                    <p data-i18n="feature1Desc">在金色沙丘與海面交界，寫下啟航宣言，預備好第一步。</p>
+                    <a href="wave.html" class="feature-link" data-i18n="featureLink">進入任務 →</a>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3 data-i18n="feature2Title">星空下的祈願・榕樹公園</h3>
+                    <p data-i18n="feature2Desc">仰望星空，寫下給未來自己的祈願。</p>
+                    <a href="mission5.html" class="feature-link" data-i18n="featureLink">進入任務 →</a>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">🌅</div>
+                    <h3 data-i18n="feature3Title">自然中的告別儀式・內埤情人灣</h3>
+                    <p data-i18n="feature3Desc">在海邊完成一個告別儀式，向過去的自己道別。</p>
+                    <a href="mission10.html" class="feature-link" data-i18n="featureLink">進入任務 →</a>
+                </article>
+            </section>
+        </main>
+    </div>
+    
+    <!-- 心靈筆記模態視窗 -->
+    <div class="modal" id="notes-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <h2 data-i18n="mindNotes">📖 心靈筆記</h2>
+            <div class="notes-list" id="notes-list"></div>
+        </div>
+    </div>
+    
+    <!-- QR 碼掃描庫 -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="i18n.js"></script>
+    <script src="task-progress.js"></script>
+    <script src="hero-guide.js"></script>
+    <script src="esg-stats.js"></script>
+    <script src="traveler-store.js"></script>
+    <script src="script.js"></script>
+    <script src="index-script.js"></script>
+    <script src="index-i18n.js"></script>
+    
+    <script>
+        // 更新主頁面的任務進度顯示
+        document.addEventListener('DOMContentLoaded', () => {
+            // 回到主頁時清除所有測試模式標記
+            const allTasks = ['wave', 'rain', 'dawn', 'mission4', 'mission5', 'mission6', 'mission7', 'mission8', 'mission9', 'mission10'];
+            allTasks.forEach(taskKey => {
+                // 清除測試模式標記
+                sessionStorage.removeItem(`test_mode_${taskKey}`);
+                // 清除測試模式的驗證數據
+                const verificationData = sessionStorage.getItem(`location_verified_${taskKey}`);
+                if (verificationData) {
+                    try {
+                        const data = JSON.parse(verificationData);
+                        if (data.isTestMode === true) {
+                            // 如果是測試模式，清除它
+                            sessionStorage.removeItem(`location_verified_${taskKey}`);
+                        }
+                    } catch (e) {
+                        // 解析失敗，清除數據
+                        sessionStorage.removeItem(`location_verified_${taskKey}`);
+                    }
+                }
+            });
+            console.log('[app.html] 已清除所有測試模式標記');
+
+            // 自動導向第一關並啟動與自然互動
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('auto') === 'nature') {
+                const type = params.get('type');
+                const target = type ? `wave.html?auto=nature&type=${encodeURIComponent(type)}` : 'wave.html?auto=nature';
+                window.location.href = target;
+                return;
+            }
+            
+            function updateTaskProgress() {
+                const progress = TaskProgress.getTaskProgress();
+                const percentage = TaskProgress.getProgressPercentage();
+                
+                // 更新進度條
+                const progressBar = document.getElementById('progress-bar');
+                const progressText = document.getElementById('progress-text');
+                if (progressBar) {
+                    progressBar.style.width = percentage + '%';
+                }
+                if (progressText) {
+                    const t = window.I18n ? window.I18n.getTranslation(window.I18n.getCurrentLanguage()) : {};
+                    const progressFormat = t.progressFormat || 'Progress: {percentage}% ({completed}/10)';
+                    progressText.textContent = progressFormat
+                        .replace('{percentage}', percentage)
+                        .replace('{completed}', progress.completed.length);
+                }
+                
+                // 更新每個任務按鈕的狀態（所有 10 關）
+                const allTasks = ['wave', 'rain', 'dawn', 'mission4', 'mission5', 'mission6', 'mission7', 'mission8', 'mission9', 'mission10'];
+                allTasks.forEach(taskKey => {
+                    const status = TaskProgress.showTaskLockStatus(taskKey);
+                    const statusEl = document.getElementById(`status-${taskKey}`);
+                    const btnLink = document.querySelector(`[data-task="${taskKey}"]`);
+                    const btn = btnLink?.querySelector('.mission-btn');
+                    
+                    if (statusEl) {
+                        statusEl.textContent = status.message;
+                        statusEl.className = 'mission-status ' + status.status;
+                    }
+                    
+                    if (btnLink && btn) {
+                        if (status.status === 'locked') {
+                            btnLink.style.pointerEvents = 'none';
+                            btn.style.opacity = '0.6';
+                            btn.style.cursor = 'not-allowed';
+                            btnLink.href = 'javascript:void(0)';
+                            btnLink.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                const t = window.I18n ? window.I18n.getTranslation(window.I18n.getCurrentLanguage()) : {};
+                                const taskLockedMsg = (t.taskLockedMessage || 'You need to complete {task} first to access this mission').replace('{task}', status.requiredTask);
+                                alert(taskLockedMsg);
+                            });
+                        } else {
+                            btnLink.style.pointerEvents = 'auto';
+                            btn.style.opacity = '1';
+                            btn.style.cursor = 'pointer';
+                            // 根據任務鍵值設定正確的 HTML 文件
+                            if (taskKey === 'wave') {
+                                btnLink.href = 'wave.html';
+                            } else if (taskKey === 'rain') {
+                                btnLink.href = 'rain.html';
+                            } else if (taskKey === 'dawn') {
+                                btnLink.href = 'dawn.html';
+                            } else {
+                                btnLink.href = `${taskKey}.html`;
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 初始更新
+            updateTaskProgress();
+            
+            // 監聽任務完成事件
+            window.addEventListener('taskCompleted', () => {
+                updateTaskProgress();
+            });
+        });
+    </script>
+</body>
+</html>

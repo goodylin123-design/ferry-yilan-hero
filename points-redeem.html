@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="環保點數兌換系統：用累積的環保點數兌換折扣與消費">
+    <title>環保點數兌換 - 擺渡蘭陽英雄之旅</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ocean-background" aria-hidden="true">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    
+    <div class="coastline" aria-hidden="true">
+        <div class="dune dune-front"></div>
+        <div class="dune dune-mid"></div>
+        <div class="dune dune-back"></div>
+        <div class="coastline-highlight"></div>
+    </div>
+    
+    <div class="container">
+        <!-- 語言選擇器 -->
+        <div class="language-selector" id="language-selector">
+            <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="選擇語言">
+                <span class="lang-icon">🌐</span>
+                <span class="lang-current" id="lang-current">繁體中文</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown" style="display: none;">
+                <button type="button" class="lang-option" data-lang="zh-TW">繁體中文</button>
+                <button type="button" class="lang-option" data-lang="zh-CN">简体中文</button>
+                <button type="button" class="lang-option" data-lang="en">English</button>
+                <button type="button" class="lang-option" data-lang="ja">日本語</button>
+                <button type="button" class="lang-option" data-lang="ko">한국어</button>
+            </div>
+        </div>
+        
+        <header class="header">
+            <a href="app.html" class="back-link" data-i18n="backToHome">← 返回英雄之旅首頁</a>
+            <h1 class="title" data-i18n="pointsRedeemTitle">💚 環保點數兌換</h1>
+            <p class="subtitle" data-i18n="pointsRedeemSubtitle">用你的環保行動換取實質回饋</p>
+        </header>
+        
+        <main id="main-content" class="content">
+            <!-- 點數餘額顯示 -->
+            <section class="card" id="points-balance-card">
+                <h2 data-i18n="myPoints">我的環保點數</h2>
+                <div class="points-display">
+                    <div class="points-number" id="points-total">0</div>
+                    <div class="points-label" data-i18n="points">點</div>
+                </div>
+                <p class="points-description" data-i18n="pointsDesc">每完成 1 公里路程可獲得 100 點環保點數</p>
+            </section>
+            
+            <!-- 可兌換項目 -->
+            <section class="card" aria-labelledby="redeem-items-title">
+                <h2 id="redeem-items-title" data-i18n="redeemItems">🎁 可兌換項目</h2>
+                <div class="redeem-grid" id="redeem-items-grid">
+                    <!-- 項目會由 JavaScript 動態生成 -->
+                </div>
+            </section>
+            
+            <!-- 兌換紀錄 -->
+            <section class="card" aria-labelledby="redeem-history-title">
+                <h2 id="redeem-history-title" data-i18n="redeemHistory">📜 兌換紀錄</h2>
+                <div class="redeem-history" id="redeem-history-list">
+                    <p class="empty-message" data-i18n="noRedeemHistory">尚無兌換紀錄</p>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- 兌換確認模態視窗 -->
+    <div class="modal" id="redeem-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close-redeem">&times;</span>
+            <h2 data-i18n="confirmRedeem">確認兌換</h2>
+            <div id="redeem-confirm-content"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="btn-cancel-redeem" data-i18n="btnCancel">取消</button>
+                <button type="button" class="btn btn-primary" id="btn-confirm-redeem" data-i18n="btnConfirmRedeem">確認兌換</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="i18n.js"></script>
+    <script src="task-progress.js"></script>
+    <script src="esg-stats.js"></script>
+    <script src="traveler-store.js"></script>
+    <script src="points-redeem.js"></script>
+    <script src="index-i18n.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var back = document.querySelector('.back-link');
+            if (back && back.getAttribute('href') === 'app.html') {
+                back.href = new URL('app.html', window.location.href).href;
+            }
+        });
+    </script>
+</body>
+</html>
+

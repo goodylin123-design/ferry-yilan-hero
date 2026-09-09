@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="擺渡蘭陽英雄之旅是結合自然、行動與人工智慧的實驗平台，探索人本空間智能。" id="meta-description">
+    <title id="page-title">擺渡蘭陽英雄之旅｜與自然互動的 AI 實驗平台</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="i18n.js"></script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .festival-landing {
+            min-height: 100vh;
+            /* 優雅的背景漸變 */
+            background: linear-gradient(180deg,
+                #E0F4FF 0%,
+                #B0E0E6 20%,
+                #87CEEB 40%,
+                #4A90E2 60%,
+                #1E90FF 80%,
+                #4682B4 100%
+            );
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 0;
+            padding-bottom: 40px;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        
+        /* 頂部裝飾圖片 - 全版顯示 */
+        .festival-header-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 400px;
+            background: url('images/S__46940919-scaled.jpg') center center / cover no-repeat;
+            z-index: 0;
+            opacity: 0.8;
+            border-bottom: 4px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 圖片上方漸變遮罩，讓圖片與背景自然融合 */
+        .festival-header-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg,
+                rgba(135, 206, 235, 0.2) 0%,
+                rgba(135, 206, 235, 0.1) 20%,
+                transparent 60%,
+                rgba(255, 255, 255, 0.2) 100%
+            );
+            pointer-events: none;
+        }
+        
+        @media (max-width: 768px) {
+            .festival-header-image {
+                height: 300px;
+                background-size: cover;
+                background-position: center center;
+            }
+        }
+        
+        
+        
+        .festival-container {
+            max-width: 1000px;
+            width: 100%;
+            background: linear-gradient(145deg, 
+                rgba(255, 255, 255, 0.98) 0%,
+                rgba(240, 248, 255, 0.95) 30%,
+                rgba(250, 250, 250, 0.95) 50%,
+                rgba(240, 248, 255, 0.95) 70%,
+                rgba(255, 255, 255, 0.98) 100%
+            );
+            border-radius: 32px;
+            padding: 50px;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(255, 255, 255, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                0 0 100px rgba(70, 130, 180, 0.1);
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            margin-top: 420px; /* 為頂部圖片留出空間（圖片高度 + 間距） */
+        }
+        
+        @media (max-width: 768px) {
+            .festival-container {
+                margin-top: 320px; /* 手機版：圖片高度 + 間距 */
+            }
+        }
+        
+        .festival-header {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 30px;
+        }
+        
+        .festival-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%,
+                #667eea 20%,
+                #F59E0B 50%,
+                #667eea 80%,
+                transparent 100%
+            );
+            border-radius: 2px;
+        }
+        
+        .festival-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, 
+                #1E3A8A 0%,
+                #4A90E2 30%,
+                #F59E0B 60%,
+                #EA580C 100%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .festival-title::before {
+            content: '🏜️';
+            position: absolute;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .festival-title::after {
+            content: '🌊';
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            animation: float 3s ease-in-out infinite reverse;
+        }
+        
+        .festival-subtitle {
+            font-size: 1.3rem;
+            color: #4A90E2;
+            margin-bottom: 25px;
+            font-weight: 600;
+            text-shadow: 0 1px 3px rgba(255, 255, 255, 0.8);
+        }
+        
+        .festival-year {
+            display: inline-block;
+            background: linear-gradient(135deg, 
+                #F59E0B 0%,
+                #EA580C 50%,
+                #DC2626 100%
+            );
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 
+                0 4px 15px rgba(245, 158, 11, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .program-schedule {
+            margin-bottom: 40px;
+        }
+
+        .homepage-content {
+            font-size: 1.08rem;
+            line-height: 1.9;
+            color: #1f2937;
+        }
+
+        .homepage-section {
+            margin-bottom: 32px;
+        }
+
+        .homepage-section h2 {
+            font-size: 1.6rem;
+            margin: 0 0 12px;
+            color: #1e3a8a;
+        }
+
+        .homepage-section p {
+            margin: 0 0 12px;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(30, 58, 138, 0.35), transparent);
+            margin: 30px 0;
+        }
+
+        .world-model-diagram {
+            background: rgba(15, 23, 42, 0.04);
+            border-radius: 16px;
+            padding: 18px 20px;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: #111827;
+            overflow-x: auto;
+            margin: 16px 0;
+            white-space: pre;
+        }
+        
+        .schedule-section {
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        /* 不同場次使用不同顏色主題 */
+        .schedule-section:nth-child(1) .schedule-date {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom-color: #667eea;
+        }
+        
+        .schedule-section:nth-child(1) .schedule-item {
+            border-left-color: #667eea;
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.05) 0%,
+                rgba(118, 75, 162, 0.05) 100%
+            );
+        }
+        
+        .schedule-section:nth-child(2) .schedule-date {
+            background: linear-gradient(135deg, #F59E0B 0%, #EA580C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom-color: #F59E0B;
+        }
+        
+        .schedule-section:nth-child(2) .schedule-item {
+            border-left-color: #F59E0B;
+            background: linear-gradient(135deg, 
+                rgba(245, 158, 11, 0.05) 0%,
+                rgba(234, 88, 12, 0.05) 100%
+            );
+        }
+        
+        .schedule-section:nth-child(3) .schedule-date {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom-color: #10B981;
+        }
+        
+        .schedule-section:nth-child(3) .schedule-item {
+            border-left-color: #10B981;
+            background: linear-gradient(135deg, 
+                rgba(16, 185, 129, 0.05) 0%,
+                rgba(5, 150, 105, 0.05) 100%
+            );
+        }
+        
+        .schedule-section:nth-child(4) .schedule-date {
+            background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom-color: #EC4899;
+        }
+        
+        .schedule-section:nth-child(4) .schedule-item {
+            border-left-color: #EC4899;
+            background: linear-gradient(135deg, 
+                rgba(236, 72, 153, 0.05) 0%,
+                rgba(219, 39, 119, 0.05) 100%
+            );
+        }
+        
+        .schedule-date {
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid;
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .schedule-date::before {
+            content: '📅';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+        
+        .schedule-item {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.9) 0%,
+                rgba(254, 243, 199, 0.3) 100%
+            );
+            border-left: 5px solid;
+            padding: 25px;
+            margin-bottom: 18px;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .schedule-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+        
+        .schedule-item:hover {
+            transform: translateX(8px) translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+        
+        .schedule-item:hover::before {
+            left: 100%;
+        }
+        
+        .schedule-time {
+            font-size: 1.15rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        .schedule-section:nth-child(2) .schedule-time {
+            background: linear-gradient(135deg, #F59E0B 0%, #EA580C 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-color: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+        
+        .schedule-section:nth-child(3) .schedule-time {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .schedule-section:nth-child(4) .schedule-time {
+            background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-color: rgba(236, 72, 153, 0.1);
+            border-color: rgba(236, 72, 153, 0.2);
+        }
+        
+        .schedule-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .schedule-title::before {
+            content: '✨';
+            font-size: 1.2rem;
+        }
+        
+        .schedule-location {
+            font-size: 1rem;
+            color: #4A90E2;
+            margin-bottom: 10px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .schedule-description {
+            font-size: 0.95rem;
+            color: #4a5568;
+            line-height: 1.7;
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            border-left: 3px solid rgba(102, 126, 234, 0.3);
+        }
+        
+        .enter-button-container {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .enter-button {
+            display: inline-block;
+            background: linear-gradient(135deg, 
+                #667eea 0%,
+                #764ba2 50%,
+                #F59E0B 100%
+            );
+            color: white;
+            padding: 20px 60px;
+            border-radius: 35px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.5),
+                0 0 0 0 rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background-size: 200% 200%;
+            animation: shimmer 3s linear infinite;
+        }
+        
+        .enter-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: left 0.5s;
+        }
+        
+        .enter-button:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 12px 35px rgba(102, 126, 234, 0.6),
+                0 0 0 4px rgba(102, 126, 234, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+        
+        .enter-button:hover::before {
+            left: 100%;
+        }
+        
+        .enter-button:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+        
+        .enter-button-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        /* 語言選擇器樣式 */
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .lang-toggle-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        .lang-toggle-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .lang-icon {
+            font-size: 1.2rem;
+        }
+        
+        .lang-arrow {
+            font-size: 0.8rem;
+            transition: transform 0.3s;
+        }
+        
+        .lang-toggle-btn.active .lang-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            min-width: 150px;
+            margin-top: 5px;
+        }
+        
+        .lang-option {
+            display: block;
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            background: white;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            color: #2d3748;
+        }
+        
+        .lang-option:hover {
+            background: #f7fafc;
+        }
+        
+        .lang-option.active {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .festival-container {
+                padding: 25px 20px;
+            }
+            
+            .festival-title {
+                font-size: 1.8rem;
+            }
+            
+            .festival-subtitle {
+                font-size: 1rem;
+            }
+            
+            .schedule-date {
+                font-size: 1.3rem;
+            }
+            
+            .schedule-item {
+                padding: 15px;
+            }
+            
+            .schedule-time {
+                font-size: 1rem;
+            }
+            
+            .schedule-title {
+                font-size: 1.1rem;
+            }
+            
+            .enter-button {
+                padding: 15px 40px;
+                font-size: 1.1rem;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .language-selector {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .lang-toggle-btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 語言選擇器 -->
+    <div class="language-selector" id="language-selector">
+        <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="" data-i18n-aria-label="selectLanguage">
+            <span class="lang-icon">🌐</span>
+            <span class="lang-current" id="lang-current">繁體中文</span>
+            <span class="lang-arrow">▼</span>
+        </button>
+        <div class="lang-dropdown" id="lang-dropdown" style="display: none;">
+            <button type="button" class="lang-option" data-lang="zh-TW">繁體中文</button>
+            <button type="button" class="lang-option" data-lang="zh-CN">简体中文</button>
+            <button type="button" class="lang-option" data-lang="en">English</button>
+            <button type="button" class="lang-option" data-lang="ja">日本語</button>
+            <button type="button" class="lang-option" data-lang="ko">한국어</button>
+        </div>
+    </div>
+    
+    <div class="festival-landing">
+        <!-- 頂部裝飾圖片 -->
+        <div class="festival-header-image"></div>
+        
+        <div class="festival-container">
+            <div class="festival-header">
+                <h1 class="festival-title" data-i18n="homeHeroTitle">🌏 從台灣，打開世界的大門</h1>
+                <p class="festival-subtitle" data-i18n="homeHeroSubtitle">全球第一個以「人」為核心的空間智能實驗場域</p>
+            </div>
+
+            <div class="homepage-content">
+                <section class="homepage-section">
+                    <p data-i18n="homeIntro1">擺渡蘭陽英雄之旅，</p>
+                    <p data-i18n="homeIntro2">是一個結合自然、行動與人工智慧的實驗平台，</p>
+                    <p data-i18n="homeIntro3">探索 Large World Models（大世界模型）</p>
+                    <p data-i18n="homeIntro4">與 Spatial Intelligence（空間智能）</p>
+                    <p data-i18n="homeIntro5">在真實世界中的人本可能性。</p>
+                    <p data-i18n="homeIntro6">我們關心的，不只是 AI 能看見什麼，</p>
+                    <p data-i18n="homeIntro7">而是——</p>
+                    <p data-i18n="homeIntro8">AI 能否理解，人正在經歷什麼。</p>
+                </section>
+
+                <hr class="section-divider">
+
+                <section class="homepage-section">
+                    <h2 data-i18n="homeNatureTitle">🧭 與自然互動的 AI</h2>
+                    <p data-i18n="homeNatureTagline">感知 × 推理 × 互動 × 反思</p>
+                    <p data-i18n="homeNature1">在這裡，</p>
+                    <p data-i18n="homeNature2">人不是資料來源，</p>
+                    <p data-i18n="homeNature3">而是旅程的主角。</p>
+                    <p data-i18n="homeNature4">透過行走、停留、感受與對話，</p>
+                    <p data-i18n="homeNature5">讓 AI 在時間與空間中，</p>
+                    <p data-i18n="homeNature6">學習理解人類內在狀態的變化。</p>
+                </section>
+
+                <hr class="section-divider">
+
+                <section class="homepage-section">
+                    <h2 data-i18n="homeWorldModelTitle">🤖 Human-Centered World Model</h2>
+                    <p data-i18n="homeWorldModelSubtitle">以人為主體的世界理解系統</p>
+                    <pre class="world-model-diagram" data-i18n="homeWorldModelDiagram">[ Human in the World ]
+        │
+        │  身體行動 × 時間歷程
+        ▼
+[ Space / Nature / Time ]
+        │
+        │  互動與記憶
+        ▼
+[ AI / World Model ]
+        │
+        │  長時間理解
+        ▼
+[ Long-Horizon Coherence ]
+   │        │        │
+   ▼        ▼        ▼
+State   Direction   Narrative
+Continuity Progression Coherence</pre>
+                    <p data-i18n="homeWorldModel1">我們關心的不是任務成功率，</p>
+                    <p data-i18n="homeWorldModel2">而是——</p>
+                    <p data-i18n="homeWorldModel3">AI 是否能在一段旅程中，</p>
+                    <p data-i18n="homeWorldModel4">持續理解同一個人。</p>
+                </section>
+
+                <hr class="section-divider">
+
+                <section class="homepage-section">
+                    <h2 data-i18n="homeCoherenceTitle">🌱 Long-Horizon Coherence</h2>
+                    <p data-i18n="homeCoherenceSubtitle">長時間理解一致性</p>
+                    <p data-i18n="homeCoherence1">真正的智慧，</p>
+                    <p data-i18n="homeCoherence2">不是一次答對，</p>
+                    <p data-i18n="homeCoherence3">而是一路陪伴。</p>
+                    <p data-i18n="homeCoherence4">我們從三個面向檢驗 AI 的人本能力：</p>
+                    <p data-i18n="homeCoherence5">• 🟢 State Continuity｜狀態是否被延續理解</p>
+                    <p data-i18n="homeCoherence6">• 🔵 Directional Progression｜歷程是否有意義地推進</p>
+                    <p data-i18n="homeCoherence7">• 🟠 Narrative Coherence｜體驗是否保持一致敘事</p>
+                    <p data-i18n="homeCoherence8">這是人本空間智能的核心指標。</p>
+                </section>
+
+                <hr class="section-divider">
+
+                <section class="homepage-section">
+                    <h2 data-i18n="homeJourneyTitle">🌊 擺渡蘭陽英雄之旅</h2>
+                    <p data-i18n="homeJourneySubtitle">與自然互動的 AI 實驗平台</p>
+                    <p data-i18n="homeJourney1">從宜蘭出發，</p>
+                    <p data-i18n="homeJourney2">連結世界。</p>
+                    <p data-i18n="homeJourney3">這裡不只是旅行，</p>
+                    <p data-i18n="homeJourney4">而是一場——</p>
+                    <p data-i18n="homeJourney5">人與 AI 共同理解世界的實驗。</p>
+                </section>
+
+                <hr class="section-divider">
+
+                <section class="homepage-section">
+                    <h2 data-i18n="homeBeliefTitle">✨ 我們相信：</h2>
+                    <p data-i18n="homeBelief1">當 AI 能與人一起走過一段路，</p>
+                    <p data-i18n="homeBelief2">它才真正開始理解世界。</p>
+                </section>
+            </div>
+            
+            <div class="enter-button-container">
+                <a href="app.html" class="enter-button">
+                    <span class="enter-button-text">
+                        <span>🌊</span>
+                        <span data-i18n="festivalEnterApp">進入「擺渡蘭陽英雄之旅」</span>
+                        <span>→</span>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 圖片預載入與響應式處理
+        (function() {
+            // 檢測設備類型和螢幕尺寸
+            const isMobile = window.innerWidth <= 768;
+            const isHighRes = window.devicePixelRatio > 1 || window.innerWidth >= 1920;
+            
+            // 根據設備選擇圖片（使用實際存在的圖片）
+            let imageUrl;
+            if (isMobile) {
+                // 手機版使用較小的圖片
+                imageUrl = 'images/1599985739-2673550860-g.jpg';
+            } else if (isHighRes && window.innerWidth >= 1920) {
+                // 高解析度使用 PNG 版本
+                imageUrl = 'images/atl_m_180013860_231.png';
+            } else {
+                // 標準桌面版使用主要圖片
+                imageUrl = 'images/S__46940919-scaled.jpg';
+            }
+            
+            // 備用圖片列表（如果主要圖片載入失敗）
+            const fallbackImages = [
+                'images/S__46940919-scaled.jpg',
+                'images/1599985739-2673550860-g.jpg',
+                'images/atl_m_180013860_231.png'
+            ];
+            
+            // 預載入圖片 - 優化載入策略
+            const landing = document.querySelector('.festival-landing');
+            if (landing) {
+                landing.classList.add('image-loading');
+            }
+            
+            const img = new Image();
+            
+            // 設置載入優先級（低優先級，不阻塞其他資源）
+            if ('fetchPriority' in img) {
+                img.fetchPriority = 'low';
+            }
+            
+            // 設置 loading 屬性（lazy loading）
+            if ('loading' in img) {
+                img.loading = 'lazy';
+            }
+            
+            // 使用 decode API 異步解碼，提升性能
+            if ('decode' in img) {
+                img.onload = function() {
+                    img.decode().then(function() {
+                        if (landing) {
+                            landing.classList.remove('image-loading');
+                            landing.classList.add('image-loaded');
+                        }
+                    }).catch(function() {
+                        // 解碼失敗，但仍顯示圖片
+                        if (landing) {
+                            landing.classList.remove('image-loading');
+                            landing.classList.add('image-loaded');
+                        }
+                    });
+                };
+            } else {
+                // 不支援 decode API 的瀏覽器
+                img.onload = function() {
+                    if (landing) {
+                        landing.classList.remove('image-loading');
+                        landing.classList.add('image-loaded');
+                    }
+                };
+            }
+            
+            img.onerror = function() {
+                // 嘗試載入備用圖片
+                loadFallbackImage(landing, fallbackImages, imageUrl);
+            };
+            
+            // 開始載入圖片
+            img.src = imageUrl;
+            
+            // 備用圖片載入函數
+            function loadFallbackImage(element, fallbacks, currentUrl) {
+                if (!element || !fallbacks || fallbacks.length === 0) {
+                    console.warn('背景圖片載入失敗，使用備用漸變背景');
+                    if (element) {
+                        element.classList.add('image-failed');
+                        element.classList.remove('image-loading');
+                    }
+                    return;
+                }
+                
+                // 過濾掉當前已嘗試的圖片
+                const availableFallbacks = fallbacks.filter(url => url !== currentUrl);
+                if (availableFallbacks.length === 0) {
+                    if (element) {
+                        element.classList.add('image-failed');
+                        element.classList.remove('image-loading');
+                    }
+                    return;
+                }
+                
+                // 嘗試載入第一個備用圖片
+                const fallbackImg = new Image();
+                if ('fetchPriority' in fallbackImg) {
+                    fallbackImg.fetchPriority = 'low';
+                }
+                
+                fallbackImg.onload = function() {
+                    if (element) {
+                        element.classList.remove('image-loading');
+                        element.classList.add('image-loaded');
+                    }
+                };
+                fallbackImg.onerror = function() {
+                    console.warn('所有背景圖片載入失敗，使用備用漸變背景');
+                    if (element) {
+                        element.classList.add('image-failed');
+                        element.classList.remove('image-loading');
+                    }
+                };
+                fallbackImg.src = availableFallbacks[0];
+            }
+        })();
+        
+        // 初始化翻譯
+        document.addEventListener('DOMContentLoaded', function() {
+            // 確保 I18n 已載入
+            if (typeof window.I18n === 'undefined') {
+                console.error('I18n is not loaded');
+                return;
+            }
+            
+            // 應用初始翻譯
+            if (typeof window.I18n.applyTranslations === 'function') {
+                window.I18n.applyTranslations();
+            }
+            
+            // 更新 meta 和 title
+            const currentLang = window.I18n.getCurrentLanguage();
+            const t = window.I18n.getTranslations(currentLang);
+            const metaDesc = document.getElementById('meta-description');
+            const pageTitle = document.getElementById('page-title');
+            if (metaDesc && t.homeMetaDescription) {
+                metaDesc.content = t.homeMetaDescription;
+            }
+            if (pageTitle && t.homePageTitle) {
+                pageTitle.textContent = t.homePageTitle;
+            }
+            
+            // 更新 html lang 屬性
+            document.documentElement.lang = currentLang;
+        });
+        
+        // 語言選擇器功能
+        (function() {
+            const langToggleBtn = document.getElementById('lang-toggle-btn');
+            const langDropdown = document.getElementById('lang-dropdown');
+            const langOptions = document.querySelectorAll('.lang-option');
+            const langCurrent = document.getElementById('lang-current');
+            
+            // 切換下拉選單
+            if (langToggleBtn) {
+                langToggleBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isOpen = langDropdown.style.display === 'block';
+                    langDropdown.style.display = isOpen ? 'none' : 'block';
+                    langToggleBtn.classList.toggle('active', !isOpen);
+                });
+            }
+            
+            // 點擊外部關閉
+            document.addEventListener('click', function(e) {
+                if (langToggleBtn && langDropdown && !langToggleBtn.contains(e.target) && !langDropdown.contains(e.target)) {
+                    langDropdown.style.display = 'none';
+                    langToggleBtn.classList.remove('active');
+                }
+            });
+            
+            // 更新語言顯示
+            function updateLanguageDisplay(lang) {
+                const langNames = {
+                    'zh-TW': '繁體中文',
+                    'zh-CN': '简体中文',
+                    'en': 'English',
+                    'ja': '日本語',
+                    'ko': '한국어'
+                };
+                if (langCurrent) {
+                    langCurrent.textContent = langNames[lang] || '繁體中文';
+                }
+                if (langOptions) {
+                    langOptions.forEach(opt => {
+                        opt.classList.toggle('active', opt.getAttribute('data-lang') === lang);
+                    });
+                }
+                if (langDropdown) {
+                    langDropdown.style.display = 'none';
+                }
+                if (langToggleBtn) {
+                    langToggleBtn.classList.remove('active');
+                }
+            }
+            
+            // 選擇語言
+            if (langOptions) {
+                langOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        const lang = this.getAttribute('data-lang');
+                        if (window.I18n && typeof window.I18n.setLanguage === 'function') {
+                            window.I18n.setLanguage(lang);
+                            updateLanguageDisplay(lang);
+                            
+                            // 更新 meta 和 title
+                            const t = window.I18n.getTranslations(lang);
+                            const metaDesc = document.getElementById('meta-description');
+                            const pageTitle = document.getElementById('page-title');
+                            if (metaDesc && t.homeMetaDescription) {
+                                metaDesc.content = t.homeMetaDescription;
+                            }
+                            if (pageTitle && t.homePageTitle) {
+                                pageTitle.textContent = t.homePageTitle;
+                            }
+                            
+                            // 更新 html lang 屬性
+                            document.documentElement.lang = lang;
+                        }
+                    });
+                });
+            }
+            
+            // 初始化語言顯示
+            document.addEventListener('DOMContentLoaded', function() {
+                const currentLang = window.I18n ? window.I18n.getCurrentLanguage() : 'zh-TW';
+                updateLanguageDisplay(currentLang);
+                
+                // 監聽語言變化事件
+                if (window.I18n) {
+                    window.addEventListener('languageChanged', function() {
+                        const lang = window.I18n.getCurrentLanguage();
+                        updateLanguageDisplay(lang);
+                        
+                        // 更新 meta 和 title
+                        const t = window.I18n.getTranslations(lang);
+                        const metaDesc = document.getElementById('meta-description');
+                        const pageTitle = document.getElementById('page-title');
+                        if (metaDesc && t.homeMetaDescription) {
+                            metaDesc.content = t.homeMetaDescription;
+                        }
+                        if (pageTitle && t.homePageTitle) {
+                            pageTitle.textContent = t.homePageTitle;
+                        }
+                        
+                        // 更新 html lang 屬性
+                        document.documentElement.lang = lang;
+                    });
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

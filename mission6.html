@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="風中的聲音 - 五十二甲溼地任務">
+    <title>🌾 風中的聲音任務</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ocean-background" aria-hidden="true">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    
+    <div class="coastline" aria-hidden="true">
+        <div class="dune dune-front"></div>
+        <div class="dune dune-mid"></div>
+        <div class="dune dune-back"></div>
+        <div class="coastline-highlight"></div>
+    </div>
+    
+    <div class="container">
+        <div class="language-selector" id="language-selector">
+            <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="選擇語言">
+                <span class="lang-icon">🌐</span>
+                <span class="lang-current" id="lang-current">繁體中文</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown" style="display: none;">
+                <button type="button" class="lang-option" data-lang="zh-TW">繁體中文</button>
+                <button type="button" class="lang-option" data-lang="zh-CN">简体中文</button>
+                <button type="button" class="lang-option" data-lang="en">English</button>
+                <button type="button" class="lang-option" data-lang="ja">日本語</button>
+                <button type="button" class="lang-option" data-lang="ko">한국어</button>
+            </div>
+        </div>
+        
+        <header class="header">
+            <a href="app.html" class="back-link" data-i18n="backToHome">← 返回英雄之旅首頁</a>
+            <h1 class="title" data-i18n="mission6Title">🌾 風中的聲音任務</h1>
+            <p class="subtitle" data-i18n="mission6Subtitle">📍 五十二甲溼地・第六關</p>
+        </header>
+        
+        <main id="main-content" class="content">
+            <section class="card" aria-labelledby="mission6-title">
+                <h2 id="mission6-title" data-i18n="mission6PageTitle">第六關｜風中的聲音（五十二甲溼地）</h2>
+                <p class="mission-intro" data-i18n="mission6PageIntro">在五十二甲溼地，旅行者可以騎著單車沿著小徑，享受稻田的香氣。AI 會引導你：你是否聽到風中的聲音？這聲音如何讓你聯想到你自己的生命？旅行者可以用文字或語音記錄反思。</p>
+                
+                <div class="mission-content">
+                    <div class="whisper-container">
+                        <!-- AI 引導區域 -->
+                        <div class="ai-guide-area">
+                            <div class="ai-avatar">🌾</div>
+                            <div class="ai-message" id="ai-message">
+                                <p data-i18n="mission6AIMessage">準備好了嗎？點擊「開始引導」來開始這段內在旅程。</p>
+                            </div>
+                        </div>
+                        
+                        <!-- 控制按鈕區 -->
+                        <div class="whisper-controls">
+                            <button type="button" class="btn-whisper btn-start" id="btn-start-guide">
+                                <span data-i18n="btnStartGuide">🎤 開始引導</span>
+                            </button>
+                            <button type="button" class="btn-whisper btn-stop" id="btn-stop-guide" style="display: none;">
+                                <span data-i18n="btnStopGuide">⏸️ 暫停</span>
+                            </button>
+                        </div>
+                        
+                        <!-- 使用者回應區域 -->
+                        <div class="user-response-area" id="user-response-area" style="display: none;">
+                            <h3 data-i18n="yourFeelings">你的感受</h3>
+                            <div class="input-methods">
+                                <button type="button" class="btn-input-method active" id="btn-voice-input" data-method="voice">
+                                    <span data-i18n="voiceInput">🎤 語音輸入</span>
+                                </button>
+                                <button type="button" class="btn-input-method" id="btn-text-input" data-method="text">
+                                    <span data-i18n="textInput">✍️ 文字輸入</span>
+                                </button>
+                            </div>
+                            
+                            <!-- 語音輸入介面 -->
+                            <div class="voice-input-panel" id="voice-input-panel">
+                                <div class="recording-indicator" id="recording-indicator" style="display: none;">
+                                    <span class="recording-dot"></span>
+                                    <span data-i18n="listening">正在聆聽...</span>
+                                </div>
+                                <button type="button" class="btn-record" id="btn-record">
+                                    <span data-i18n="btnStartSpeaking">🎙️ 開始說話</span>
+                                </button>
+                                <div class="transcript-display" id="transcript-display"></div>
+                            </div>
+                            
+                            <!-- 文字輸入介面 -->
+                            <div class="text-input-panel" id="text-input-panel" style="display: none;">
+                                <textarea 
+                                    id="text-response" 
+                                    data-i18n-placeholder="textResponsePlaceholder"
+                                    placeholder="請分享：你聽到了什麼？這聲音帶給你什麼生命的聯想？"
+                                    rows="4"
+                                ></textarea>
+                            </div>
+                            
+                            <button type="button" class="btn-submit" id="btn-submit-response" style="display: none;">
+                                <span data-i18n="btnSubmitResponse">💭 送出感受</span>
+                            </button>
+                        </div>
+                        
+                        <!-- AI 反饋區域 -->
+                        <div class="ai-feedback-area" id="ai-feedback-area" style="display: none;">
+                            <div class="feedback-content" id="feedback-content"></div>
+                        </div>
+                        
+                        <!-- 錄音與保存區域 -->
+                        <div class="recording-save-area" id="recording-save-area" style="display: none;">
+                            <h3 data-i18n="recordFeelings">📝 記錄你的感受</h3>
+                            <div class="recording-controls">
+                                <button type="button" class="btn-record-feeling" id="btn-record-feeling">
+                                    <span data-i18n="btnRecordFeeling">🎙️ 錄下感受</span>
+                                </button>
+                                <div class="recording-status" id="recording-status"></div>
+                            </div>
+                            <div class="save-controls">
+                                <button type="button" class="btn-save" id="btn-save-note">
+                                    <span data-i18n="btnSaveNote">💾 保存至心靈筆記</span>
+                                </button>
+                                <button type="button" class="btn-view-notes" id="btn-view-notes">
+                                    <span data-i18n="btnViewNotes">📖 查看心靈筆記</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 與自然互動區域 -->
+            <section class="nature-interaction-section card">
+                <h3 data-i18n="natureInteractionTitle">🌿 與自然互動</h3>
+                <p data-i18n="natureInteractionDesc">掃描 QR code，與大自然進行不同的互動體驗</p>
+                <button type="button" class="btn-nature-interaction" id="btn-nature-interaction">
+                    <span data-i18n="natureInteractionButton">📷 與自然互動</span>
+                </button>
+                <div id="qr-reader-nature" style="display: none; margin-top: 20px;"></div>
+                
+                <!-- 互動結果區域 -->
+                <div id="nature-result-area" class="nature-result-area" style="display: none;">
+                    <div class="nature-result-header">
+                        <h4 id="nature-result-title" data-i18n="natureInteractionTitle">🌿 與自然互動</h4>
+                        <button type="button" class="btn-close-result" id="btn-close-nature-result">×</button>
+                    </div>
+                    <div id="nature-result-content" class="nature-result-content"></div>
+                </div>
+            </section>
+
+            <section class="qr-section card">
+                <h3 data-i18n="scanQRNext">📷 掃描 QR 碼進入下一個任務</h3>
+                <p data-i18n="scanQRNextDesc">完成此任務後，掃描下一個任務的 QR 碼繼續旅程</p>
+                <button type="button" class="btn-qr-scan" id="btn-scan-qr">
+                    <span data-i18n="btnScanQR">📷 掃描 QR 碼</span>
+                </button>
+                <div id="qr-reader" style="display: none; margin-top: 20px;"></div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- 心靈筆記模態視窗 -->
+    <div class="modal" id="notes-modal" style="display: none;">
+        <div class="modal-content">
+            <span class="modal-close" id="modal-close">&times;</span>
+            <h2 data-i18n="mindNotes">📖 心靈筆記</h2>
+            <div class="notes-list" id="notes-list"></div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="i18n.js"></script>
+    <script src="missions-data.js"></script>
+    <script src="task-progress.js"></script>
+    <script src="location-check.js"></script>
+    <script src="esg-stats.js"></script>
+    <script src="traveler-store.js"></script>
+    <script src="task-script.js"></script>
+    <script src="sheet-sync.js"></script>
+    <script src="ai-dialogue.js"></script>
+    <script src="nature-interaction.js"></script>
+    <script src="mission6-script.js"></script>
+    <script src="index-i18n.js"></script>
+    <script>
+        // 頁面載入時檢查任務解鎖和位置（最後執行，確保所有腳本已載入）
+        document.addEventListener('DOMContentLoaded', function() {
+            var back = document.querySelector('.back-link');
+            if (back && back.getAttribute('href') === 'app.html') { back.href = new URL('app.html', window.location.href).href; }
+            const taskKey = 'mission6';
+            
+            // 延遲執行確保所有腳本已載入
+            setTimeout(function() {
+                // 確保函數已載入
+                if (typeof window.isLocationVerified === 'undefined' || typeof window.blockTaskContent === 'undefined') {
+                    console.error('[mission6.html] 位置檢測函數未載入');
+                    return;
+                }
+                
+                // 先檢查任務是否解鎖
+                if (typeof TaskProgress !== 'undefined' && TaskProgress.blockUnlockedTask && TaskProgress.blockUnlockedTask(taskKey)) {
+                    return;
+                }
+                
+                // 初始化與自然互動功能（無論位置驗證是否通過都初始化）
+                if (typeof window.NatureInteraction !== 'undefined') {
+                    let missionData = null;
+                    if (window.MISSIONS) {
+                        missionData = window.MISSIONS.find(mission => mission.key === 'mission6') || null;
+                    }
+                    if (!missionData) {
+                        missionData = {
+                            id: 'wind-voices',
+                            key: 'mission6',
+                            order: 6,
+                            locationName: window.I18n ? window.I18n.t('mission6Loc') : '五十二甲溼地',
+                            title: window.I18n ? window.I18n.t('mission6Title') : '風中的聲音'
+                        };
+                    }
+                    setTimeout(() => {
+                        console.log('[mission6.html] 初始化與自然互動功能，任務資料:', missionData);
+                        window.NatureInteraction.init(missionData);
+                    }, 200);
+                } else {
+                    console.warn('[mission6.html] NatureInteraction 未載入');
+                }
+
+                // 檢查位置驗證（在初始化之後）
+                if (!window.isLocationVerified(taskKey)) {
+                    window.blockTaskContent(taskKey);
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+

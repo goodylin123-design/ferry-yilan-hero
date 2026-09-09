@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="擺渡蘭陽英雄主題音樂播放器">
+    <title>🎵 英雄主題音樂 - 擺渡蘭陽</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .music-player-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .music-player-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid rgba(56, 189, 248, 0.2);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .music-title {
+            font-size: 2rem;
+            color: #0F172A;
+            margin-bottom: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        @media (max-width: 768px) {
+            .music-title {
+                font-size: 1.5rem;
+                white-space: normal;
+                word-break: keep-all;
+                line-height: 1.3;
+            }
+            
+            .music-player-card {
+                padding: 25px 15px;
+            }
+            
+            .music-controls {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn-music {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+        }
+        
+        .music-subtitle {
+            color: #64748B;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .music-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .btn-music {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-play {
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+        
+        .btn-play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+        
+        .btn-stop {
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+        
+        .btn-stop:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+        
+        .music-info {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(14, 165, 233, 0.05));
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        .music-info h3 {
+            color: #0F172A;
+            margin-bottom: 15px;
+        }
+        
+        .music-info-item {
+            margin-bottom: 10px;
+            color: #475569;
+        }
+        
+        .music-info-label {
+            font-weight: 600;
+            color: #3B82F6;
+            display: inline-block;
+            width: 120px;
+        }
+        
+        .music-elements {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid rgba(56, 189, 248, 0.2);
+        }
+        
+        .music-elements h3 {
+            color: #0F172A;
+            margin-bottom: 15px;
+        }
+        
+        .music-elements ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .music-elements li {
+            padding: 10px 0;
+            color: #475569;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+        }
+        
+        .music-elements li:last-child {
+            border-bottom: none;
+        }
+        
+        .music-elements li::before {
+            content: '🎵 ';
+            margin-right: 10px;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background: #EF4444;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .status-indicator.playing {
+            background: #10B981;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean-background" aria-hidden="true">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+    </div>
+    
+    <div class="coastline" aria-hidden="true">
+        <div class="dune dune-front"></div>
+        <div class="dune dune-mid"></div>
+        <div class="dune dune-back"></div>
+        <div class="coastline-highlight"></div>
+    </div>
+    
+    <div class="container">
+        <!-- 語言選擇器 -->
+        <div class="language-selector" id="language-selector">
+            <button type="button" class="lang-toggle-btn" id="lang-toggle-btn" aria-label="選擇語言">
+                <span class="lang-icon">🌐</span>
+                <span class="lang-current" id="lang-current">繁體中文</span>
+                <span class="lang-arrow">▼</span>
+            </button>
+            <div class="lang-dropdown" id="lang-dropdown" style="display: none;">
+                <button type="button" class="lang-option" data-lang="zh-TW">繁體中文</button>
+                <button type="button" class="lang-option" data-lang="zh-CN">简体中文</button>
+                <button type="button" class="lang-option" data-lang="en">English</button>
+                <button type="button" class="lang-option" data-lang="ja">日本語</button>
+                <button type="button" class="lang-option" data-lang="ko">한국어</button>
+            </div>
+        </div>
+        
+        <header class="header">
+            <a href="app.html" class="back-link" data-i18n="backToHome">← 返回英雄之旅首頁</a>
+            <h1 class="title" data-i18n="musicPlayerTitle">🎵 英雄主題音樂</h1>
+            <p class="subtitle" data-i18n="musicPlayerSubtitle">擺渡蘭陽英雄之歌</p>
+        </header>
+        
+        <main class="content">
+            <div class="music-player-container">
+                <section class="music-player-card">
+                    <h2 class="music-title" data-i18n="musicTitle">《擺渡蘭陽・英雄之旅》</h2>
+                    <p class="music-subtitle" data-i18n="musicSubtitle">英雄主題音樂 · 海岸療癒系</p>
+                    
+                    <audio id="hero-music-audio" loop playsinline>
+                        <source src="擺渡蘭陽英雄之旅.mp3" type="audio/mpeg">
+                        您的瀏覽器不支援音訊播放。
+                    </audio>
+                    <div class="music-controls">
+                        <button type="button" class="btn-music btn-play" id="btn-play-music">
+                            <span>▶️</span>
+                            <span data-i18n="btnPlayMusic">播放音樂</span>
+                        </button>
+                        <button type="button" class="btn-music btn-stop" id="btn-stop-music" style="display: none;">
+                            <span>⏹️</span>
+                            <span data-i18n="btnStopMusic">停止播放</span>
+                        </button>
+                    </div>
+                    
+                    <div id="music-status" style="color: #64748B; font-size: 0.9rem;">
+                        <span class="status-indicator" id="status-indicator"></span>
+                        <span id="status-text" data-i18n="ready">準備就緒</span>
+                    </div>
+                    
+                    <!-- 音量控制 -->
+                    <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                        <label for="volume-control" style="color: #475569; font-size: 0.9rem;" data-i18n="volume">音量：</label>
+                        <input type="range" id="volume-control" min="0" max="100" value="70" style="width: 200px; cursor: pointer;">
+                        <span id="volume-value" style="color: #3B82F6; font-weight: 600; min-width: 40px;">70%</span>
+                    </div>
+                </section>
+                
+                <!-- 歌詞區塊 -->
+                <section class="card" style="margin-top: 30px; background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(254, 243, 199, 0.95));">
+                    <h3 style="color: #0F172A; margin-bottom: 20px; text-align: center; font-size: 1.5rem;" data-i18n="lyrics">📝 歌詞</h3>
+                    <p style="text-align: center; color: #64748B; font-size: 0.85rem; margin-bottom: 16px;" data-i18n="lyricsCredit">本歌曲由林攸信於2026/1/6與AI共同協作生成</p>
+                    <div class="lyrics-container" style="line-height: 2; color: #334155; font-size: 1.05rem; text-align: center; padding: 20px;">
+                        <div class="lyrics-verse" style="margin-bottom: 25px;">
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse1Line1">請來蘭陽，浪為你點燈</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse1Line2">海的呼吸，靠近一個人</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse1Line3">世界退場，只留下里程</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse1Line4">霧把名字，還給心門</p>
+                        </div>
+                        
+                        <div class="lyrics-chorus" style="margin: 25px 0; padding: 20px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border-left: 4px solid #F59E0B;">
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus1Line1">感受孤獨・找回自己</p>
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus1Line2">在龜山島看見舊日的你</p>
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus1Line3">一步一步・英雄之旅</p>
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus1Line4">腳印會遠去，意義更清晰</p>
+                        </div>
+                        
+                        <div class="lyrics-verse" style="margin-bottom: 25px;">
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse2Line1">請來蘭陽・把心交給四季</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse2Line2">AI 的聲音陪你問問題</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse2Line3">海那麼安靜不是逃離</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse2Line4">而是走回，真的自己</p>
+                        </div>
+                        
+                        <div class="lyrics-verse" style="margin-bottom: 25px;">
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse3Line1">稻香很深，風經過利澤</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse3Line2">河流倒影，問我值不值得</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse3Line3">拾起落葉，在傳藝時刻</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse3Line4">放下的人，變得自由了</p>
+                        </div>
+                        
+                        <div class="lyrics-chorus" style="margin: 25px 0; padding: 20px; background: rgba(245, 158, 11, 0.1); border-radius: 12px; border-left: 4px solid #F59E0B;">
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus2Line1">感受孤獨・找回自己</p>
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus2Line2">沙丘記得每段呼喊的潮汐</p>
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus2Line3">星空之下・英雄之旅</p>
+                            <p style="margin: 8px 0; color: #92400E; font-weight: 600; font-size: 1.1rem;" data-i18n="lyricsChorus2Line4">我會與昨日，好好分離</p>
+                        </div>
+                        
+                        <div class="lyrics-verse" style="margin-bottom: 25px;">
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse4Line1">請來蘭陽・把心交給四季</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse4Line2">AI 的遊戲帶我回原地</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse4Line3">路的盡頭不是日期</p>
+                            <p style="margin: 8px 0; color: #0F172A; font-weight: 500;" data-i18n="lyricsVerse4Line4">是更好的，我的自己</p>
+                        </div>
+                        
+                        <div class="lyrics-outro" style="margin-top: 30px; padding: 20px; background: rgba(56, 189, 248, 0.1); border-radius: 12px; border-left: 4px solid #3B82F6;">
+                            <p style="margin: 8px 0; color: #1E40AF; font-weight: 600; font-size: 1.15rem;" data-i18n="lyricsOutroLine1">請來蘭陽</p>
+                            <p style="margin: 8px 0; color: #1E40AF; font-weight: 600; font-size: 1.15rem;" data-i18n="lyricsOutroLine2">感受孤獨</p>
+                            <p style="margin: 8px 0; color: #1E40AF; font-weight: 600; font-size: 1.15rem;" data-i18n="lyricsOutroLine3">找回自己</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <section class="card" style="margin-top: 30px;">
+                    <h3 data-i18n="aboutSong">💡 關於這首歌</h3>
+                    <p style="color: #475569; line-height: 1.7;" data-i18n="aboutSongDesc">
+                        《擺渡蘭陽・英雄之旅》是專為「擺渡蘭陽英雄之旅」創作的主題音樂。
+                        歌詞描繪了在蘭陽海岸的旅程中，透過感受孤獨、找回自己的英雄之旅。
+                        從龜山島到沙丘，從利澤到傳藝，每一步都是與昨日分離、走向更好的自己的過程。
+                    </p>
+                    <p style="color: #475569; line-height: 1.7; margin-top: 15px;" data-i18n="aboutSongDesc2">
+                        這首音樂適合在進行任務時播放，營造海岸療癒氛圍，陪伴你走過每一段內在成長的旅程。
+                    </p>
+                    <p style="color: #64748B; margin-top: 15px; font-size: 0.9rem;" data-i18n="musicTip">
+                        💡 提示：建議使用耳機或外接喇叭以獲得最佳聆聽體驗。播放時可搭配歌詞一起欣賞。
+                    </p>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        let audio = null;
+        let isPlaying = false;
+        // #region agent log
+        var __dbgLastAction = 'none';
+        var __dbgLastTimeSec = -1;
+        function __dbg(hypothesisId, location, message, data) {
+            fetch('http://127.0.0.1:7566/ingest/7fb020dc-8142-4413-8358-5bafc5e85e90',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9e510f'},body:JSON.stringify({sessionId:'9e510f',runId:'pre-fix',hypothesisId:hypothesisId,location:location,message:message,data:data||{},timestamp:Date.now()})}).catch(function(){});
+        }
+        window.addEventListener('error', function(e) {
+            __dbg('D','music-player.html:window.error','uncaught error',{msg:String(e.message||e),filename:e.filename,lineno:e.lineno,innerWidth:window.innerWidth});
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            __dbg('D','music-player.html:unhandledrejection','unhandledrejection',{reason:String(e.reason)});
+        });
+        // #endregion
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // 與其他子頁面一致：返回連結用絕對網址，避免手機瀏覽器解析錯誤
+            var back = document.querySelector('.back-link');
+            if (back && back.getAttribute('href') === 'app.html') {
+                back.href = new URL('app.html', window.location.href).href;
+            }
+
+            audio = document.getElementById('hero-music-audio');
+            const btnPlay = document.getElementById('btn-play-music');
+            const btnStop = document.getElementById('btn-stop-music');
+            const statusIndicator = document.getElementById('status-indicator');
+            const statusText = document.getElementById('status-text');
+            const volumeControl = document.getElementById('volume-control');
+            const volumeValue = document.getElementById('volume-value');
+
+            if (!audio) return;
+
+            audio.volume = 0.7;
+            volumeControl.value = 70;
+
+            // #region agent log
+            (function logInit() {
+                var br = back ? back.getBoundingClientRect() : null;
+                var cx = br ? br.left + br.width / 2 : 0;
+                var cy = br ? br.top + br.height / 2 : 0;
+                var topEl = (br && document.elementFromPoint(cx, cy)) ? document.elementFromPoint(cx, cy) : null;
+                var srcEl = audio.querySelector('source');
+                __dbg('C','music-player.html:init','page init',{
+                    innerWidth: window.innerWidth,
+                    innerHeight: window.innerHeight,
+                    ua: navigator.userAgent,
+                    hrefAttr: back ? back.getAttribute('href') : null,
+                    hrefResolved: back ? back.href : null,
+                    backRect: br ? {x:br.x,y:br.y,w:br.width,h:br.height} : null,
+                    topElAtBack: topEl ? (topEl.tagName + '#' + (topEl.id||'') + '.' + (topEl.className||'')) : null,
+                    audioSrc: audio.currentSrc || (srcEl && srcEl.getAttribute('src')),
+                    sourceSrc: srcEl ? srcEl.getAttribute('src') : null
+                });
+            })();
+            if (back) {
+                function logBack(ev) {
+                    var br = back.getBoundingClientRect();
+                    var cx = br.left + br.width / 2;
+                    var cy = br.top + br.height / 2;
+                    var topEl = document.elementFromPoint(cx, cy);
+                    __dbg('E','music-player.html:back','back-link event',{
+                        type: ev.type,
+                        defaultPrevented: ev.defaultPrevented,
+                        href: back.href,
+                        target: ev.target && (ev.target.tagName + '.' + (ev.target.className||'')),
+                        topElAtCenter: topEl ? (topEl.tagName + '#' + (topEl.id||'') + '.' + (topEl.className||'')) : null,
+                        isPlaying: isPlaying,
+                        audioPaused: audio.paused,
+                        currentTime: audio.currentTime
+                    });
+                }
+                back.addEventListener('click', logBack, true);
+                back.addEventListener('touchend', logBack, true);
+            }
+            // #endregion
+
+            volumeControl.addEventListener('input', (e) => {
+                audio.volume = parseInt(e.target.value) / 100;
+                volumeValue.textContent = e.target.value + '%';
+            });
+
+            btnPlay.addEventListener('click', () => {
+                if (audio && !isPlaying) {
+                    // #region agent log
+                    __dbgLastAction = 'play-click';
+                    __dbg('B','music-player.html:play-click','user clicked play',{readyState:audio.readyState,networkState:audio.networkState,currentSrc:audio.currentSrc,paused:audio.paused});
+                    // #endregion
+                    audio.play().then(() => {
+                        statusText.textContent = '正在播放...';
+                        statusIndicator.classList.add('playing');
+                        btnPlay.style.display = 'none';
+                        btnStop.style.display = 'flex';
+                        isPlaying = true;
+                    }).catch((err) => {
+                        console.error('播放失敗:', err);
+                        statusText.textContent = '播放失敗，請再試一次';
+                        // #region agent log
+                        __dbg('A','music-player.html:play-catch','play() rejected',{name:err&&err.name,msg:String(err)});
+                        // #endregion
+                    });
+                }
+            });
+
+            btnStop.addEventListener('click', () => {
+                if (audio && isPlaying) {
+                    // #region agent log
+                    __dbgLastAction = 'stop-click';
+                    __dbg('B','music-player.html:stop-click','user clicked stop',{currentTime:audio.currentTime});
+                    // #endregion
+                    audio.pause();
+                    audio.currentTime = 0;
+                    statusText.textContent = '已停止';
+                    statusIndicator.classList.remove('playing');
+                    btnPlay.style.display = 'flex';
+                    btnStop.style.display = 'none';
+                    isPlaying = false;
+                }
+            });
+
+            audio.addEventListener('play', () => {
+                statusText.textContent = '正在播放...';
+                statusIndicator.classList.add('playing');
+                btnPlay.style.display = 'none';
+                btnStop.style.display = 'flex';
+                isPlaying = true;
+            });
+            audio.addEventListener('pause', () => {
+                statusText.textContent = '已暫停';
+                statusIndicator.classList.remove('playing');
+                btnPlay.style.display = 'flex';
+                btnStop.style.display = 'none';
+                isPlaying = false;
+                // #region agent log
+                __dbg('B','music-player.html:pause','audio pause event',{lastAction:__dbgLastAction,currentTime:audio.currentTime,ended:audio.ended,readyState:audio.readyState,networkState:audio.networkState,paused:audio.paused});
+                // #endregion
+            });
+            audio.addEventListener('ended', () => {
+                statusText.textContent = '播放完成';
+                statusIndicator.classList.remove('playing');
+                btnPlay.style.display = 'flex';
+                btnStop.style.display = 'none';
+                isPlaying = false;
+                // #region agent log
+                __dbg('B','music-player.html:ended','audio ended',{currentTime:audio.currentTime,loop:audio.loop,duration:audio.duration});
+                // #endregion
+            });
+            audio.addEventListener('error', (e) => {
+                console.error('音訊錯誤:', e);
+                statusText.textContent = '音樂載入失敗';
+                // #region agent log
+                var mediaErr = audio.error;
+                __dbg('A','music-player.html:error','audio error',{code:mediaErr&&mediaErr.code,message:mediaErr&&mediaErr.message,currentSrc:audio.currentSrc,networkState:audio.networkState,readyState:audio.readyState,currentTime:audio.currentTime});
+                // #endregion
+            });
+            // #region agent log
+            audio.addEventListener('loadedmetadata', function() {
+                __dbg('A','music-player.html:loadedmetadata','metadata',{duration:audio.duration,currentSrc:audio.currentSrc,readyState:audio.readyState});
+            });
+            audio.addEventListener('stalled', function() {
+                __dbg('A','music-player.html:stalled','stalled',{currentTime:audio.currentTime,readyState:audio.readyState,networkState:audio.networkState});
+            });
+            audio.addEventListener('waiting', function() {
+                __dbg('A','music-player.html:waiting','waiting/buffering',{currentTime:audio.currentTime,readyState:audio.readyState,networkState:audio.networkState});
+            });
+            audio.addEventListener('timeupdate', function() {
+                var sec = Math.floor(audio.currentTime);
+                if (sec !== __dbgLastTimeSec && sec % 2 === 0) {
+                    __dbgLastTimeSec = sec;
+                    __dbg('A','music-player.html:timeupdate','playback progress',{currentTime:audio.currentTime,paused:audio.paused,readyState:audio.readyState,networkState:audio.networkState,buffered:audio.buffered.length?audio.buffered.end(audio.buffered.length-1):0});
+                }
+            });
+            // #endregion
+        });
+    </script>
+    <script src="i18n.js"></script>
+    <script src="index-i18n.js"></script>
+</body>
+</html>
+
