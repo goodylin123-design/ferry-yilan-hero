@@ -54,45 +54,7 @@ const SheetSync = {
             rating: rating
         };
 
-        const audioBlob = extras.audioBlob;
-        if (audioBlob && typeof FileReader !== 'undefined') {
-            this._blobToBase64(audioBlob).then((base64) => {
-                // 超過約 2MB 原始檔就不夾帶，避免手機送不出；試算表仍會標「有錄音」
-                if (base64 && base64.length < 2800000) {
-                    payload.audioBase64 = base64;
-                    payload.audioMime = audioBlob.type || 'audio/webm';
-                }
-                this._post(payload).catch(() => this._enqueue(this._queueSafe(payload)));
-            }).catch(() => {
-                this._post(payload).catch(() => this._enqueue(payload));
-            });
-            return;
-        }
-
         this._post(payload).catch(() => this._enqueue(payload));
-    },
-
-    _queueSafe: function(payload) {
-        const queued = {};
-        Object.keys(payload).forEach((key) => {
-            if (key !== 'audioBase64') queued[key] = payload[key];
-        });
-        return queued;
-    },
-
-    _blobToBase64: function(blob) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                const result = String(reader.result || '');
-                const comma = result.indexOf(',');
-                resolve(comma >= 0 ? result.slice(comma + 1) : result);
-            };
-            reader.onerror = function() {
-                reject(reader.error);
-            };
-            reader.readAsDataURL(blob);
-        });
     },
 
     _post: function(payload) {
@@ -103,12 +65,10 @@ const SheetSync = {
         // doPost 沒跑到，筆記只留在 localStorage。
         // no-cors + text/plain 可避開預檢與轉址讀取，讓 POST 真的送出。
         // 回應會是 opaque（無法讀 body、也不能看 status），所以不要檢查 res.ok。
-        // 有音檔時不要用 keepalive：瀏覽器對 keepalive 請求有約 64KB 上限，
-        // 錄音 base64 會被丟掉，試算表就只剩「有錄音」、沒有連結。
         return fetch(this.ENDPOINT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            keepalive: !payload.audioBase64,
+            keepalive: true,
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: body
         });
