@@ -523,18 +523,22 @@ elements.btnSaveNote?.addEventListener('click', () => {
     }
 
     let rating = '';
+    if (window.EsgStats && typeof window.EsgStats.promptRating === 'function') {
+        rating = window.EsgStats.promptRating() || '';
+    }
     // 標記第一關任務為完成（如果是在 wave.html 頁面）
     if (window.location.pathname.includes('wave.html') && window.TaskProgress) {
         const completed = window.TaskProgress.completeTask('wave');
         if (completed) {
             window.TaskProgress.showTaskCompleteNotification('wave');
             // 更新 ESG 統計：完成次數 + 筆記數 + 自評分數 + 實地路程與環保點數
-            if (window.EsgStats) {
-                rating = window.EsgStats.recordMissionCompletion('wave', {
-                    notesAdded: 1,
-                    askRating: true
-                }) || '';
-            }
+                if (window.EsgStats) {
+                    window.EsgStats.recordMissionCompletion('wave', {
+                        notesAdded: 1,
+                        askRating: false,
+                        rating: rating
+                    });
+                }
             // 更新 TravelerStore 的任務完成資料
             if (window.TravelerStore) {
                 window.TravelerStore.recordMissionCompleted('wave', {

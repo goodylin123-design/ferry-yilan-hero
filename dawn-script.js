@@ -57,6 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let rating = '';
+        if (window.EsgStats && typeof window.EsgStats.promptRating === 'function') {
+            rating = window.EsgStats.promptRating() || '';
+        }
         // 標記第三關任務為完成
         if (window.TaskProgress) {
             const completed = window.TaskProgress.completeTask('dawn');
@@ -66,8 +69,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (window.EsgStats) {
                     rating = window.EsgStats.recordMissionCompletion('dawn', {
                         notesAdded: 1,
-                        askRating: true
-                    }) || '';
+                        askRating: false,
+                        rating: rating
+                    }) || rating;
                 }
                 // 更新 TravelerStore 的任務完成資料
                 if (window.TravelerStore) {

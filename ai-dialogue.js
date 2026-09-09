@@ -517,6 +517,15 @@ const AIDialogue = {
     
     // 保存筆記
     saveNote: function() {
+        if (this.state.isRecording) {
+            this.stopRecordFeeling();
+            const self = this;
+            setTimeout(function() {
+                self.saveNote();
+            }, 800);
+            return;
+        }
+
         const notes = JSON.parse(localStorage.getItem('whisperNotes') || '[]');
         const currentLang = window.I18n ? window.I18n.getCurrentLanguage() : 'zh-TW';
         const t = window.I18n ? window.I18n.getTranslation(currentLang) : {};
@@ -538,16 +547,20 @@ const AIDialogue = {
             window.TravelerStore.recordMindNote(note);
         }
 
-        let rating = '';
+        const rating = (window.EsgStats && typeof window.EsgStats.promptRating === 'function')
+            ? (window.EsgStats.promptRating() || '')
+            : '';
+
         if (window.TaskProgress) {
             const completed = window.TaskProgress.completeTask(this.missionKey);
             if (completed) {
                 window.TaskProgress.showTaskCompleteNotification(this.missionKey);
                 if (window.EsgStats) {
-                    rating = window.EsgStats.recordMissionCompletion(this.missionKey, {
+                    window.EsgStats.recordMissionCompletion(this.missionKey, {
                         notesAdded: 1,
-                        askRating: true
-                    }) || '';
+                        askRating: false,
+                        rating: rating
+                    });
                 }
             }
         }

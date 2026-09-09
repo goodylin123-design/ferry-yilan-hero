@@ -103,10 +103,12 @@ const SheetSync = {
         // doPost 沒跑到，筆記只留在 localStorage。
         // no-cors + text/plain 可避開預檢與轉址讀取，讓 POST 真的送出。
         // 回應會是 opaque（無法讀 body、也不能看 status），所以不要檢查 res.ok。
+        // 有音檔時不要用 keepalive：瀏覽器對 keepalive 請求有約 64KB 上限，
+        // 錄音 base64 會被丟掉，試算表就只剩「有錄音」、沒有連結。
         return fetch(this.ENDPOINT_URL, {
             method: 'POST',
             mode: 'no-cors',
-            keepalive: true,
+            keepalive: !payload.audioBase64,
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: body
         });

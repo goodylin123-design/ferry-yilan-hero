@@ -16,18 +16,20 @@ function doPost(e) {
       audioUrl = String(audioErr);
     }
 
-    sheet.appendRow([
+    const row = [
       new Date(),
       data.mission || '',
       data.travelerId || '',
       data.emotion || '',
       data.content || '',
       data.date || '',
-      data.userAgent || '',
+      String(data.userAgent || '').replace(/,/g, ';'),
       data.hasAudio ? '是' : '否',
       data.rating || '',
-      audioUrl
-    ]);
+      audioUrl || (data.hasAudio ? '未收到音檔' : '')
+    ];
+    const nextRow = sheet.getLastRow() + 1;
+    sheet.getRange(nextRow, 1, 1, row.length).setValues([row]);
 
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'ok' }))

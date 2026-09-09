@@ -100,13 +100,15 @@ function recordMissionCompletion(taskKey, options = {}) {
 
     let rating = '';
     if (askRating) {
-        const input = window.prompt('完成這一關後，你此刻的整體感受（1-5 分，5 分為非常有幫助）？', '4');
-        if (input !== null) {
-            const score = parseInt(input.trim(), 10);
-            if (!isNaN(score) && score >= 1 && score <= 5) {
-                missionStats.selfRatings.push(score);
-                rating = String(score);
-            }
+        rating = promptRating();
+        if (rating) {
+            missionStats.selfRatings.push(parseInt(rating, 10));
+        }
+    } else if (options.rating) {
+        rating = String(options.rating);
+        const score = parseInt(rating, 10);
+        if (!isNaN(score) && score >= 1 && score <= 5) {
+            missionStats.selfRatings.push(score);
         }
     }
 
@@ -139,11 +141,20 @@ function recordMissionCompletion(taskKey, options = {}) {
     return rating;
 }
 
+function promptRating() {
+    const input = window.prompt('這一筆筆記的整體感受（1-5 分，5 分為非常有幫助）？', '4');
+    if (input === null) return '';
+    const score = parseInt(String(input).trim(), 10);
+    if (!isNaN(score) && score >= 1 && score <= 5) return String(score);
+    return '';
+}
+
 if (typeof window !== 'undefined') {
     window.EsgStats = {
         load: loadEsgStats,
         save: saveEsgStats,
         recordMissionCompletion,
+        promptRating,
         TASK_DISTANCE_KM,
         POINTS_PER_KM
     };
