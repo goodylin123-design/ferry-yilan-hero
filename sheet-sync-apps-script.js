@@ -6,8 +6,16 @@ const SHEET_NAME = '心靈筆記';
 const AUDIO_FOLDER_NAME = '心靈筆記錄音';
 
 function setupDrivePermissions() {
-  const folder = getOrCreateFolder_();
-  Logger.log('錄音資料夾已就緒：' + folder.getUrl());
+  try {
+    const folder = getOrCreateFolder_();
+    const message = '授權成功。錄音資料夾：' + folder.getUrl();
+    Logger.log(message);
+    SpreadsheetApp.getUi().alert(message);
+  } catch (err) {
+    Logger.log(String(err));
+    SpreadsheetApp.getUi().alert('授權失敗：' + String(err));
+    throw err;
+  }
 }
 
 function doPost(e) {
@@ -72,7 +80,7 @@ function getOrCreateSheet() {
 }
 
 function saveAudio_(data) {
-  if (!data.audioBase64) return '';
+  if (!data || !data.audioBase64) return '';
 
   const bytes = Utilities.base64Decode(data.audioBase64);
   const mime = data.audioMime || 'audio/webm';
@@ -84,12 +92,17 @@ function saveAudio_(data) {
   const name = (data.travelerId || 'traveler') + '_' + (data.mission || 'note') + '_' + Date.now() + '.' + ext;
   const folder = getOrCreateFolder_();
   const file = folder.createFile(Utilities.newBlob(bytes, mime, name));
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  try {
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  } catch (shareErr) {
+    Logger.log('無法公開分享音檔，改用擁有者連結：' + shareErr);
+  }
   return file.getUrl();
 }
 
 function getOrCreateFolder_() {
-  const folders = DriveApp.getFoldersByName(AUDIO_FOLDER_NAME);
+  const root = DriveApp.getRootFolder();
+  const folders = root.getFoldersByName(AUDIO_FOLDER_NAME);
   if (folders.hasNext()) return folders.next();
-  return DriveApp.createFolder(AUDIO_FOLDER_NAME);
+  return root.createFolder(AUDIO_FOLDER_NAME);
 }
