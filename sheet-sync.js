@@ -46,13 +46,19 @@ const SheetSync = {
     },
 
     _post: function(payload) {
+        const body = JSON.stringify(payload);
+
+        // Apps Script 網頁應用程式會先 302 到 script.googleusercontent.com。
+        // 手機 Safari 用預設 cors 模式跟這個轉址時，fetch 常整段失敗，
+        // doPost 沒跑到，筆記只留在 localStorage。
+        // no-cors + text/plain 可避開預檢與轉址讀取，讓 POST 真的送出。
+        // 回應會是 opaque（無法讀 body、也不能看 status），所以不要檢查 res.ok。
         return fetch(this.ENDPOINT_URL, {
             method: 'POST',
+            mode: 'no-cors',
+            keepalive: true,
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-        }).then((res) => {
-            if (!res.ok) throw new Error('sheet sync failed: ' + res.status);
-            return res;
+            body: body
         });
     },
 

@@ -51,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
         notes.unshift(note);
         localStorage.setItem('whisperNotes', JSON.stringify(notes));
 
+        if (window.SheetSync) {
+            window.SheetSync.send(note);
+        }
+
         // 同步寫入 TravelerStore 的心靈筆記資料結構
         if (window.TravelerStore) {
             window.TravelerStore.recordMindNote(note);

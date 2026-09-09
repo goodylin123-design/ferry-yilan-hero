@@ -517,6 +517,10 @@ elements.btnSaveNote?.addEventListener('click', () => {
     notes.unshift(note); // 新增到最前面
     localStorage.setItem('whisperNotes', JSON.stringify(notes));
 
+    if (window.SheetSync) {
+        window.SheetSync.send(note);
+    }
+
     // 同步寫入 TravelerStore 的心靈筆記資料結構
     if (window.TravelerStore) {
         window.TravelerStore.recordMindNote(note);
