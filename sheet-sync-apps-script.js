@@ -10,7 +10,7 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
 
     const row = [
-      new Date(),
+      Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy/MM/dd HH:mm:ss'),
       data.mission || '',
       data.travelerId || '',
       data.emotion || '',
@@ -50,10 +50,12 @@ function getOrCreateSheet() {
     sheet = ss.insertSheet(SHEET_NAME);
     sheet.appendRow(headers);
     sheet.setFrozenRows(1);
+    sheet.getRange('A:A').setNumberFormat('yyyy/mm/dd hh:mm:ss');
     return sheet;
   }
 
   sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
   sheet.setFrozenRows(1);
+  sheet.getRange('A:A').setNumberFormat('yyyy/mm/dd hh:mm:ss');
   return sheet;
 }
