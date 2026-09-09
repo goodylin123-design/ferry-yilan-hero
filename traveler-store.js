@@ -193,6 +193,14 @@ if (typeof window !== 'undefined') {
     window.TravelerStore = {
         load: loadTraveler,
         save: saveTraveler,
+        getTravelerId: function() {
+            const state = loadTraveler();
+            if (!state.travelerId) {
+                state.travelerId = `anon-${Date.now()}`;
+            }
+            saveTraveler(state);
+            return state.travelerId;
+        },
         recordMissionCompleted,
         recordMindNote
     };

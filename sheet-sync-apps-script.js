@@ -8,7 +8,13 @@ function doPost(e) {
   try {
     const sheet = getOrCreateSheet();
     const data = JSON.parse(e.postData.contents);
-    const audioUrl = saveAudio_(data);
+
+    let audioUrl = '';
+    try {
+      audioUrl = saveAudio_(data);
+    } catch (audioErr) {
+      audioUrl = String(audioErr);
+    }
 
     sheet.appendRow([
       new Date(),
@@ -52,12 +58,8 @@ function getOrCreateSheet() {
     return sheet;
   }
 
-  const lastCol = Math.max(sheet.getLastColumn(), 1);
-  const current = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
-  if (current.length < headers.length) {
-    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    sheet.setFrozenRows(1);
-  }
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+  sheet.setFrozenRows(1);
   return sheet;
 }
 
