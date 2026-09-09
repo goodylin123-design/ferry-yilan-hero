@@ -16,6 +16,7 @@ const AIDialogue = {
             timerSeconds: 600,
             audioRecorder: null,
             audioChunks: [],
+            recordedAudio: null,
             currentResponse: '',
             currentEmotion: '思考'
         };
@@ -133,6 +134,11 @@ const AIDialogue = {
             this.submitResponse();
         });
         
+        // 錄下感受（音訊錄音，與上方「語音輸入」不同）
+        this.elements.btnRecordFeeling?.addEventListener('click', () => {
+            this.toggleRecordFeeling();
+        });
+
         // 保存筆記
         this.elements.btnSaveNote?.addEventListener('click', () => {
             this.saveNote();
@@ -189,6 +195,10 @@ const AIDialogue = {
         
         if (window.speechSynthesis) {
             window.speechSynthesis.cancel();
+        }
+
+        if (this.state.isRecording) {
+            this.stopRecordFeeling();
         }
         
         if (this.state.recognition) {
@@ -387,26 +397,122 @@ const AIDialogue = {
         const emotion = this.extractEmotion(text);
         const currentLang = window.I18n ? window.I18n.getCurrentLanguage() : 'zh-TW';
         const t = window.I18n ? window.I18n.getTranslation(currentLang) : {};
-        
-        // 根據任務和情緒提供反饋
-        const feedbackKey = `${this.missionKey}AIFeedback${emotion}`;
-        const feedback = window.I18n ? window.I18n.t(feedbackKey, currentLang) : null;
-        
-        if (feedback) {
+
+        const emotionKeyMap = {
+            '平靜': 'Calm',
+            '憂慮': 'Worried',
+            '思考': 'Thinking',
+            '興奮': 'Thinking',
+            '悲傷': 'Worried'
+        };
+        const feedbackKey = `${this.missionKey}AIFeedback${emotionKeyMap[emotion] || 'Thinking'}`;
+        const feedback = window.I18n ? window.I18n.t(feedbackKey, currentLang) : '';
+
+        // I18n.t 找不到時會回傳 key 本身，不能當成成功
+        if (feedback && feedback !== feedbackKey) {
             return feedback;
         }
-        
-        // 預設反饋（根據任務）
+
         const defaultFeedbacks = {
+            wave: {
+                '平靜': t.waveAIFeedbackCalm || '親愛的旅人，你找到了內心的寧靜，這是很珍貴的時刻。有時候內心如同海浪起伏，但它終將平靜下來。',
+                '憂慮': t.waveAIFeedbackWorried || '親愛的旅人，我聽見了你的憂慮。海浪有時洶湧、有時平靜，你的憂慮也會來也會去。',
+                '思考': t.waveAIFeedbackThinking || '親愛的旅人，思考是很好的開始。就像海浪不斷來回，你的思緒也在探索，答案會自然浮現。'
+            },
             rain: {
-                '平靜': t.rainFeedbackCalm || '親愛的旅人，你找到了內心的平靜。山風告訴我們，力量來自於內心的穩定。',
-                '憂慮': t.rainFeedbackWorried || '親愛的旅人，我聽見了你的憂慮。就像山風會來也會去，你的憂慮也會過去。',
-                '思考': t.rainFeedbackThinking || '親愛的旅人，思考是很好的開始。讓山風陪伴你，答案會自然浮現。'
+                '平靜': t.rainAIFeedbackCalm || '親愛的旅人，你找到了內心的平靜。山風告訴我們，力量來自於內心的穩定。',
+                '憂慮': t.rainAIFeedbackWorried || '親愛的旅人，我聽見了你的憂慮。就像山風會來也會去，你的憂慮也會過去。',
+                '思考': t.rainAIFeedbackThinking || '親愛的旅人，思考是很好的開始。讓山風陪伴你，答案會自然浮現。'
             }
         };
-        
-        const missionFeedbacks = defaultFeedbacks[this.missionKey] || defaultFeedbacks.rain;
+
+        const missionFeedbacks = defaultFeedbacks[this.missionKey] || defaultFeedbacks.wave;
         return missionFeedbacks[emotion] || missionFeedbacks['思考'];
+    },
+
+    _pickAudioMimeType: function() {
+        if (!window.MediaRecorder) return '';
+        const types = ['audio/mp4', 'audio/aac', 'audio/webm;codecs=opus', 'audio/webm'];
+        for (let i = 0; i < types.length; i++) {
+            if (MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(types[i])) {
+                return types[i];
+            }
+        }
+        return '';
+    },
+
+    _recordFeelingLabel: function() {
+        if (!this.elements.btnRecordFeeling) return null;
+        return this.elements.btnRecordFeeling.querySelector('span') || this.elements.btnRecordFeeling;
+    },
+
+    toggleRecordFeeling: async function() {
+        const t = window.I18n ? window.I18n.getTranslation(window.I18n.getCurrentLanguage()) : {};
+
+        if (this.state.isRecording) {
+            this.stopRecordFeeling();
+            return;
+        }
+
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+            alert(t.microphonePermissionDenied || '無法使用麥克風錄音。請改用上方文字輸入，或用 Safari / Chrome 開啟本頁。');
+            return;
+        }
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const mimeType = this._pickAudioMimeType();
+            const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+
+            this.state.audioChunks = [];
+            this.state.audioRecorder = recorder;
+            this.state.recordedAudio = null;
+
+            recorder.ondataavailable = (event) => {
+                if (event.data && event.data.size > 0) {
+                    this.state.audioChunks.push(event.data);
+                }
+            };
+
+            recorder.onstop = () => {
+                stream.getTracks().forEach((track) => track.stop());
+                const blobType = recorder.mimeType || mimeType || 'audio/webm';
+                this.state.recordedAudio = new Blob(this.state.audioChunks, { type: blobType });
+                if (this.elements.recordingStatus) {
+                    this.elements.recordingStatus.textContent = t.recordingComplete || '✅ 錄音完成！可以保存至心靈筆記。';
+                    this.elements.recordingStatus.style.color = '#10B981';
+                }
+            };
+
+            recorder.onerror = () => {
+                this.state.isRecording = false;
+                stream.getTracks().forEach((track) => track.stop());
+                alert(t.microphonePermissionDenied || '錄音失敗，請再試一次。');
+            };
+
+            recorder.start();
+            this.state.isRecording = true;
+            const labelEl = this._recordFeelingLabel();
+            if (labelEl) labelEl.textContent = t.recordingStopped || '⏹️ 停止錄音';
+            if (this.elements.recordingStatus) {
+                this.elements.recordingStatus.textContent = t.recordingInProgress || '🔴 正在錄音...';
+                this.elements.recordingStatus.style.color = '#EF4444';
+            }
+        } catch (error) {
+            console.error('無法取得麥克風權限:', error);
+            alert(t.microphonePermissionDenied || '無法取得麥克風權限，請在瀏覽器設定允許麥克風，或改用文字輸入。');
+        }
+    },
+
+    stopRecordFeeling: function() {
+        const t = window.I18n ? window.I18n.getTranslation(window.I18n.getCurrentLanguage()) : {};
+        const recorder = this.state.audioRecorder;
+        if (recorder && recorder.state !== 'inactive') {
+            recorder.stop();
+        }
+        this.state.isRecording = false;
+        const labelEl = this._recordFeelingLabel();
+        if (labelEl) labelEl.textContent = t.recordingStart || '🎙️ 錄下感受';
     },
     
     // 保存筆記
@@ -421,6 +527,7 @@ const AIDialogue = {
             content: this.state.currentResponse || t.mindNotesNoText || '（無文字內容）',
             emotion: this.state.currentEmotion,
             mission: this.missionKey,
+            audio: this.state.recordedAudio ? true : false,
             timestamp: Date.now()
         };
         

@@ -146,6 +146,9 @@ const TRANSLATIONS = {
         wavePageTitle: '第一關｜啟程：蜜月灣海灘',
         wavePageIntro: '在頭城蜜月灣的海邊靜坐，遠眺龜山島，閉上眼睛，聽著海浪的聲音。讓 AI 引導你與內心對話。',
         waveAIMessage: '準備好了嗎？點擊「開始引導」來開始這段內在旅程。',
+        waveAIFeedbackCalm: '親愛的旅人，你找到了內心的寧靜，這是很珍貴的時刻。有時候，內心如同海浪般起伏，但它終將平靜下來。你已經學會了與自己相處，這份平靜會成為你繼續前行的力量。',
+        waveAIFeedbackWorried: '親愛的旅人，我聽見了你的憂慮。海浪有時洶湧，有時平靜，你的憂慮就像海浪一樣，會來也會去。試著像觀察海浪一樣觀察你的情緒，不抗拒也不執著。',
+        waveAIFeedbackThinking: '親愛的旅人，思考是很好的開始。就像海浪不斷地來回，你的思緒也在探索。給自己一些時間，答案會像退潮後的貝殼一樣自然浮現。你正在為自己尋找方向，這本身就是成長的證明。',
         btnStartGuide: '🎤 開始引導',
         btnStopGuide: '⏸️ 暫停',
         // 與自然互動
@@ -188,6 +191,7 @@ const TRANSLATIONS = {
         recordingStopped: '⏹️ 停止錄音',
         recordingInProgress: '🔴 正在錄音...',
         recordingStart: '🎙️ 錄下感受',
+        microphonePermissionDenied: '無法取得麥克風權限，請檢查瀏覽器設定，或改用文字輸入。',
         noteSaved: '✨ 已保存至心靈筆記！',
         noteSavedStatus: '💾 已保存至心靈筆記',
         reflectionSaved: '✨ 反思已保存！',
@@ -847,6 +851,9 @@ const TRANSLATIONS = {
         statusLocked: '🔒 尚未解锁',
         // 語音引導文字（簡體中文使用繁體中文版本）
         voiceGuideWave: '閉上眼睛，靜靜地聽著海浪聲。請問這些海浪聲讓你想起什麼？它像你的內心嗎？',
+        waveAIFeedbackCalm: '亲爱的旅人，你找到了内心的宁静，这是很珍贵的时刻。有时候，内心如同海浪般起伏，但它终将平静下来。',
+        waveAIFeedbackWorried: '亲爱的旅人，我听见了你的忧虑。海浪有时汹涌，有时平静，你的忧虑也会来也会去。',
+        waveAIFeedbackThinking: '亲爱的旅人，思考是很好的开始。就像海浪不断来回，你的思绪也在探索，答案会自然浮现。',
         voiceGuideRain: '感受山風輕輕拂過臉頰。你覺得這股風來自何方？在你的人生中，有什麼力量推動著你前行？',
         rainUserResponse: '請分享：這股風讓你想起什麼？在你的人生中，有什麼力量推動著你前行？',
         rainAIFeedbackCalm: '親愛的旅人，你找到了內心的平靜。山風告訴我們，力量來自於內心的穩定。就像山風會來也會去，你的內心也會找到平衡。',
@@ -1562,6 +1569,9 @@ const TRANSLATIONS = {
         statusLocked: '🔒 Locked',
         // 語音引導文字（英文）
         voiceGuideWave: 'Close your eyes and quietly listen to the sound of the waves. What do these waves remind you of? Does it mirror your inner self?',
+        waveAIFeedbackCalm: 'Dear traveler, you have found inner calm. This is a precious moment. The heart may rise and fall like waves, but it will settle.',
+        waveAIFeedbackWorried: 'Dear traveler, I hear your worries. Waves can be stormy or still; your worries will come and go too.',
+        waveAIFeedbackThinking: 'Dear traveler, thinking is a good start. Like waves moving back and forth, your thoughts are exploring. Give yourself time, and answers will surface.',
         voiceGuideRain: 'Feel the mountain breeze gently brush your cheeks. Where do you think this breeze comes from? What forces in your life push you forward?',
         rainUserResponse: 'Please share: What does this breeze remind you of? What forces in your life push you forward?',
         rainAIFeedbackCalm: 'Dear traveler, you have found inner peace. The mountain breeze tells us that strength comes from inner stability. Just as the breeze comes and goes, your heart will find balance.',
@@ -2269,6 +2279,9 @@ const TRANSLATIONS = {
         statusLocked: '🔒 ロック',
         // 語音引導文字（日文）
         voiceGuideWave: '目を閉じて、静かに波の音を聞いてください。これらの波の音は何を思い出させますか？それはあなたの内面のようです？',
+        waveAIFeedbackCalm: '親愛なる旅人、あなたは内面の静けさを見つけました。心は波のように上下しても、やがて穏やかになります。',
+        waveAIFeedbackWorried: '親愛なる旅人、あなたの心配を聞きました。波が激しくなったり静まったりするように、心配も来ては去っていきます。',
+        waveAIFeedbackThinking: '親愛なる旅人、考えることは良い始まりです。波が行き来するように、答えは自然に現れてきます。',
         voiceGuideRain: '山風が頬を優しく撫でるのを感じてください。この風はどこから来ると思いますか？あなたの人生で、何があなたを前進させる力となっていますか？',
         rainUserResponse: '共有してください：この風は何を思い出させますか？あなたの人生で、何があなたを前進させる力となっていますか？',
         rainAIFeedbackCalm: '親愛なる旅人、あなたは内面の平静を見つけました。山風は私たちに、力は内面の安定から来ることを教えてくれます。山風が来て去るように、あなたの心もバランスを見つけるでしょう。',
@@ -2970,6 +2983,9 @@ const TRANSLATIONS = {
         statusLocked: '🔒 잠금',
         // 語音引導文字（韓文）
         voiceGuideWave: '눈을 감고 조용히 파도의 소리를 들어보세요. 이 파도 소리가 무엇을 떠올리게 하나요? 그것이 당신의 내면과 닮았나요?',
+        waveAIFeedbackCalm: '친애하는 여행자여, 당신은 내면의 평온을 찾았습니다. 마음은 파도처럼 오르내릴 수 있지만, 결국 가라앉습니다.',
+        waveAIFeedbackWorried: '친애하는 여행자여, 당신의 걱정을 들었습니다. 파도가 거칠었다가 잔잔해지듯이, 걱정도 왔다가 갑니다.',
+        waveAIFeedbackThinking: '친애하는 여행자여, 생각하는 것은 좋은 시작입니다. 파도가 오가듯이, 답은 자연스럽게 떠오를 것입니다.',
         voiceGuideRain: '산바람이 뺨을 가볍게 스치는 것을 느껴보세요. 이 바람은 어디서 오는 것 같나요? 당신의 인생에서 무엇이 당신을 앞으로 나아가게 하는 힘인가요?',
         rainUserResponse: '공유해주세요: 이 바람이 무엇을 떠올리게 하나요? 당신의 인생에서 무엇이 당신을 앞으로 나아가게 하는 힘인가요?',
         rainAIFeedbackCalm: '친애하는 여행자여, 당신은 내면의 평온을 찾았습니다. 산바람은 우리에게 힘이 내면의 안정에서 온다고 말해줍니다. 산바람이 오고 가는 것처럼, 당신의 마음도 균형을 찾을 것입니다.',
