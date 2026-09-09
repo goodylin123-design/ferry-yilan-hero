@@ -103,6 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (notes.length === 0) {
             notesList.innerHTML = `<p style="text-align: center; color: #64748B; padding: 20px;">${t.mindNotesEmpty || '親愛的旅人，你的心靈筆記本還是空的。<br>完成任務後，記得把感受保存下來，這些都是你成長路上的珍貴記錄。'}</p>`;
+        } else if (window.renderWhisperNotesList) {
+            window.renderWhisperNotesList(notesList);
         } else {
             notesList.innerHTML = notes.map(note => `
                 <div class="note-item">

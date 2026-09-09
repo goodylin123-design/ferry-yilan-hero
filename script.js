@@ -520,11 +520,18 @@ elements.btnSaveNote?.addEventListener('click', () => {
     // 同步寫入 TravelerStore 的心靈筆記資料結構
     if (window.TravelerStore) {
         window.TravelerStore.recordMindNote(note);
+        if (whisperState.recordedAudio && window.TravelerStore.saveNoteAudio) {
+            window.TravelerStore.saveNoteAudio(note.id, whisperState.recordedAudio);
+        }
     }
 
     let rating = '';
     if (window.EsgStats && typeof window.EsgStats.promptRating === 'function') {
         rating = window.EsgStats.promptRating() || '';
+    }
+    if (rating) {
+        note.rating = rating;
+        localStorage.setItem('whisperNotes', JSON.stringify(notes));
     }
     // 標記第一關任務為完成（如果是在 wave.html 頁面）
     if (window.location.pathname.includes('wave.html') && window.TaskProgress) {
@@ -575,7 +582,9 @@ elements.btnViewNotes?.addEventListener('click', () => {
     const notes = JSON.parse(localStorage.getItem('whisperNotes') || '[]');
     
     const t = window.I18n ? window.I18n.getTranslation(window.I18n.getCurrentLanguage()) : {};
-    if (notes.length === 0) {
+    if (window.renderWhisperNotesList) {
+        window.renderWhisperNotesList(elements.notesList);
+    } else if (notes.length === 0) {
         elements.notesList.innerHTML = `<p style="text-align: center; color: #64748B; padding: 20px;">${t.mindNotesEmpty || '親愛的旅人，你的心靈筆記本還是空的。<br>完成任務後，記得把感受保存下來，這些都是你成長路上的珍貴記錄。'}</p>`;
     } else {
         elements.notesList.innerHTML = notes.map(note => `

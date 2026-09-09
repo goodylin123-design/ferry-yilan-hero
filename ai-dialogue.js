@@ -539,17 +539,26 @@ const AIDialogue = {
             audio: this.state.recordedAudio ? true : false,
             timestamp: Date.now()
         };
+
+        const audioBlob = this.state.recordedAudio || null;
         
         notes.unshift(note);
         localStorage.setItem('whisperNotes', JSON.stringify(notes));
 
         if (window.TravelerStore) {
             window.TravelerStore.recordMindNote(note);
+            if (audioBlob && window.TravelerStore.saveNoteAudio) {
+                window.TravelerStore.saveNoteAudio(note.id, audioBlob);
+            }
         }
 
         const rating = (window.EsgStats && typeof window.EsgStats.promptRating === 'function')
             ? (window.EsgStats.promptRating() || '')
             : '';
+        if (rating) {
+            note.rating = rating;
+            localStorage.setItem('whisperNotes', JSON.stringify(notes));
+        }
 
         if (window.TaskProgress) {
             const completed = window.TaskProgress.completeTask(this.missionKey);
@@ -595,6 +604,8 @@ const AIDialogue = {
             
             if (notes.length === 0) {
                 notesList.innerHTML = `<p style="text-align: center; color: #64748B; padding: 20px;">${t.mindNotesEmpty || '親愛的旅人，你的心靈筆記本還是空的。'}</p>`;
+            } else if (window.renderWhisperNotesList) {
+                window.renderWhisperNotesList(notesList);
             } else {
                 notesList.innerHTML = notes.map(note => `
                     <div class="note-item">
@@ -638,6 +649,8 @@ window.loadNotesList = function() {
     
     if (notes.length === 0) {
         notesList.innerHTML = `<p style="text-align: center; color: #64748B; padding: 20px;">${t.mindNotesEmpty || '親愛的旅人，你的心靈筆記本還是空的。'}</p>`;
+    } else if (window.renderWhisperNotesList) {
+        window.renderWhisperNotesList(notesList);
     } else {
         notesList.innerHTML = notes.map(note => `
             <div class="note-item">

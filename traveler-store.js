@@ -189,6 +189,100 @@ function recordMindNote(note) {
     saveTraveler(state);
 }
 
+const AUDIO_DB_NAME = 'whisperNoteAudio';
+const AUDIO_STORE_NAME = 'clips';
+
+function openAudioDb() {
+    return new Promise(function(resolve, reject) {
+        if (!window.indexedDB) {
+            reject(new Error('no indexedDB'));
+            return;
+        }
+        const req = indexedDB.open(AUDIO_DB_NAME, 1);
+        req.onupgradeneeded = function() {
+            const db = req.result;
+            if (!db.objectStoreNames.contains(AUDIO_STORE_NAME)) {
+                db.createObjectStore(AUDIO_STORE_NAME);
+            }
+        };
+        req.onsuccess = function() { resolve(req.result); };
+        req.onerror = function() { reject(req.error); };
+    });
+}
+
+function saveNoteAudio(noteId, blob) {
+    if (!noteId || !blob) return Promise.resolve();
+    return openAudioDb().then(function(db) {
+        return new Promise(function(resolve, reject) {
+            const tx = db.transaction(AUDIO_STORE_NAME, 'readwrite');
+            tx.objectStore(AUDIO_STORE_NAME).put(blob, String(noteId));
+            tx.oncomplete = function() { resolve(); };
+            tx.onerror = function() { reject(tx.error); };
+        });
+    }).catch(function(err) {
+        console.warn('[TravelerStore] 無法保存錄音:', err);
+    });
+}
+
+function getNoteAudioUrl(noteId) {
+    return openAudioDb().then(function(db) {
+        return new Promise(function(resolve, reject) {
+            const tx = db.transaction(AUDIO_STORE_NAME, 'readonly');
+            const req = tx.objectStore(AUDIO_STORE_NAME).get(String(noteId));
+            req.onsuccess = function() {
+                resolve(req.result ? URL.createObjectURL(req.result) : '');
+            };
+            req.onerror = function() { reject(req.error); };
+        });
+    }).catch(function() {
+        return '';
+    });
+}
+
+function attachNoteAudioPlayers(root) {
+    if (!root) return;
+    const nodes = root.querySelectorAll('[data-audio-id]');
+    nodes.forEach(function(el) {
+        const id = el.getAttribute('data-audio-id');
+        getNoteAudioUrl(id).then(function(url) {
+            if (!url) {
+                el.textContent = '🎙️ 這支手機沒有這段錄音檔';
+                return;
+            }
+            el.innerHTML = '';
+            const player = document.createElement('audio');
+            player.controls = true;
+            player.preload = 'metadata';
+            player.src = url;
+            el.appendChild(player);
+        });
+    });
+}
+
+function renderWhisperNotesList(notesList, emptyHtml) {
+    if (!notesList) return;
+    const notes = JSON.parse(localStorage.getItem('whisperNotes') || '[]');
+    const currentLang = window.I18n ? window.I18n.getCurrentLanguage() : 'zh-TW';
+    const t = window.I18n ? window.I18n.getTranslation(currentLang) : {};
+    if (notes.length === 0) {
+        notesList.innerHTML = emptyHtml || ('<p style="text-align: center; color: #64748B; padding: 20px;">' + (t.mindNotesEmpty || '親愛的旅人，你的心靈筆記本還是空的。') + '</p>');
+        return;
+    }
+    notesList.innerHTML = notes.map(function(note) {
+        const rating = note.rating ? (' · 評分 ' + note.rating) : '';
+        const audioBlock = note.audio
+            ? ('<div class="note-audio" data-audio-id="' + note.id + '">🎙️ 載入錄音中...</div>')
+            : '';
+        return '<div class="note-item">' +
+            '<div class="note-date">' + (note.date || '') + '</div>' +
+            '<div class="note-content">' + (note.content || '') + '</div>' +
+            '<div class="note-emotion">' + (t.mindNotesEmotion || '情緒：') + (note.emotion || '') + (note.audio ? ' 🎙️' : '') + rating + '</div>' +
+            audioBlock +
+            '</div>';
+    }).join('');
+    attachNoteAudioPlayers(notesList);
+}
+
 if (typeof window !== 'undefined') {
     window.TravelerStore = {
         load: loadTraveler,
@@ -202,8 +296,12 @@ if (typeof window !== 'undefined') {
             return state.travelerId;
         },
         recordMissionCompleted,
-        recordMindNote
+        recordMindNote,
+        saveNoteAudio,
+        getNoteAudioUrl,
+        renderWhisperNotesList
     };
+    window.renderWhisperNotesList = renderWhisperNotesList;
 }
 
 

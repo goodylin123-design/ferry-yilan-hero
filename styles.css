@@ -1217,10 +1217,11 @@ body {
     margin-bottom: 8px;
 }
 
-.note-item .note-emotion {
-    font-size: 0.9rem;
-    color: #3B82F6;
-    font-weight: 600;
+.note-item .note-audio {
+    margin-top: 10px;
+}
+.note-item .note-audio audio {
+    width: 100%;
 }
 
 /* 響應式設計 - 海風中的呢喃 */
