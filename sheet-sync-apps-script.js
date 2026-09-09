@@ -6,16 +6,13 @@ const SHEET_NAME = '心靈筆記';
 const AUDIO_FOLDER_NAME = '心靈筆記錄音';
 
 function setupDrivePermissions() {
-  try {
-    const folder = getOrCreateFolder_();
-    const message = '授權成功。錄音資料夾：' + folder.getUrl();
-    Logger.log(message);
-    SpreadsheetApp.getUi().alert(message);
-  } catch (err) {
-    Logger.log(String(err));
-    SpreadsheetApp.getUi().alert('授權失敗：' + String(err));
-    throw err;
-  }
+  // 只能從編輯器「執行」這個函式來跳出雲端硬碟授權。
+  // 不要用 SpreadsheetApp.getUi()，在編輯器執行時會變成「不明錯誤」。
+  const root = DriveApp.getRootFolder();
+  const folders = root.getFoldersByName(AUDIO_FOLDER_NAME);
+  const folder = folders.hasNext() ? folders.next() : root.createFolder(AUDIO_FOLDER_NAME);
+  Logger.log('授權成功');
+  Logger.log(folder.getUrl());
 }
 
 function doPost(e) {
