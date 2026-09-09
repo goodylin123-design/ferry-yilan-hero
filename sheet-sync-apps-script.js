@@ -1,8 +1,14 @@
-// 請整份貼到 Google 試算表「擴充功能 → Apps Script」後，
-// 用「管理部署作業 → 編輯 → 新版本」重新部署（網址不要變）。
+// 請整份貼到 Google 試算表「擴充功能 → Apps Script」後：
+// 1. 上方下拉選「setupDrivePermissions」，按「執行」，允許雲端硬碟權限
+// 2. 「部署」→「管理部署作業」→ 鉛筆 → 版本選「新版本」→ 部署（網址不要變）
 
 const SHEET_NAME = '心靈筆記';
 const AUDIO_FOLDER_NAME = '心靈筆記錄音';
+
+function setupDrivePermissions() {
+  const folder = getOrCreateFolder_();
+  Logger.log('錄音資料夾已就緒：' + folder.getUrl());
+}
 
 function doPost(e) {
   try {
@@ -83,12 +89,7 @@ function saveAudio_(data) {
 }
 
 function getOrCreateFolder_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const parent = DriveApp.getFileById(ss.getId()).getParents().hasNext()
-    ? DriveApp.getFileById(ss.getId()).getParents().next()
-    : DriveApp.getRootFolder();
-
-  const folders = parent.getFoldersByName(AUDIO_FOLDER_NAME);
+  const folders = DriveApp.getFoldersByName(AUDIO_FOLDER_NAME);
   if (folders.hasNext()) return folders.next();
-  return parent.createFolder(AUDIO_FOLDER_NAME);
+  return DriveApp.createFolder(AUDIO_FOLDER_NAME);
 }
