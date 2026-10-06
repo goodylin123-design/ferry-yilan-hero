@@ -281,6 +281,17 @@
             allTasks.forEach(taskKey => {
                 // 清除測試模式標記
                 sessionStorage.removeItem(`test_mode_${taskKey}`);
+                try {
+                    const coordsRaw = sessionStorage.getItem(`location_coords_${taskKey}`);
+                    if (coordsRaw) {
+                        const coords = JSON.parse(coordsRaw);
+                        if (coords.isTestMode === true) {
+                            sessionStorage.removeItem(`location_coords_${taskKey}`);
+                        }
+                    }
+                } catch (e) {
+                    sessionStorage.removeItem(`location_coords_${taskKey}`);
+                }
                 // 清除測試模式的驗證數據
                 const verificationData = sessionStorage.getItem(`location_verified_${taskKey}`);
                 if (verificationData) {
@@ -289,6 +300,7 @@
                         if (data.isTestMode === true) {
                             // 如果是測試模式，清除它
                             sessionStorage.removeItem(`location_verified_${taskKey}`);
+                            sessionStorage.removeItem(`location_coords_${taskKey}`);
                         }
                     } catch (e) {
                         // 解析失敗，清除數據

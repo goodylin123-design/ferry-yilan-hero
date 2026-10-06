@@ -138,6 +138,81 @@ function getUserLocation() {
     });
 }
 
+function formatCoord(value) {
+    const n = Number(value);
+    if (!isFinite(n)) return '';
+    return String(Math.round(n * 1e6) / 1e6);
+}
+
+function getLocationRecord(taskKey) {
+    try {
+        const keyed = taskKey ? sessionStorage.getItem('location_coords_' + taskKey) : null;
+        const raw = keyed || sessionStorage.getItem('last_location_coords');
+        return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function saveLocationRecord(taskKey, opts) {
+    if (!taskKey) return null;
+    const taskLocation = TASK_LOCATIONS[taskKey] || {};
+    const prev = getLocationRecord(taskKey) || {};
+    const record = {
+        taskKey: taskKey,
+        timestamp: Date.now(),
+        isTestMode: opts && opts.isTestMode != null ? !!opts.isTestMode : !!prev.isTestMode,
+        userLat: opts && opts.userLat != null ? opts.userLat : prev.userLat,
+        userLng: opts && opts.userLng != null ? opts.userLng : prev.userLng,
+        accuracy: opts && opts.accuracy != null ? opts.accuracy : prev.accuracy,
+        distance: opts && opts.distance != null ? opts.distance : prev.distance,
+        targetLat: taskLocation.lat,
+        targetLng: taskLocation.lng,
+        targetName: taskLocation.name || ''
+    };
+    try {
+        sessionStorage.setItem('location_coords_' + taskKey, JSON.stringify(record));
+        sessionStorage.setItem('last_location_coords', JSON.stringify(record));
+    } catch (e) {
+        console.warn('[位置驗證] 無法寫入位置紀錄:', e);
+    }
+    return record;
+}
+
+function captureUserGpsBestEffort(timeoutMs) {
+    const wait = timeoutMs || 8000;
+    return new Promise(function(resolve, reject) {
+        let settled = false;
+        const timer = setTimeout(function() {
+            if (settled) return;
+            settled = true;
+            reject(new Error('location timeout'));
+        }, wait);
+        getUserLocation().then(function(pos) {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            resolve(pos);
+        }).catch(function(err) {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            reject(err);
+        });
+    });
+}
+
+function enableTestModeThenReload(taskKey, overlay, knownUserLocation) {
+    const enableTest = window.enableTestMode || enableTestMode;
+    Promise.resolve(enableTest(taskKey, knownUserLocation)).then(function() {
+        if (overlay && typeof overlay.remove === 'function') overlay.remove();
+        window.location.reload();
+    }).catch(function() {
+        if (overlay && typeof overlay.remove === 'function') overlay.remove();
+        window.location.reload();
+    });
+}
+
 // 檢查是否在任務範圍內
 function checkLocationAccess(taskKey) {
     return new Promise(async (resolve, reject) => {
@@ -352,14 +427,33 @@ function showLocationResult(overlay, result, taskKey) {
             ">${t.btnStartTask || 'Start Mission'}</button>
         `;
 
-        // 保存驗證狀態（5 分鐘內有效）
+        // 保存驗證狀態（5 分鐘內有效），並記下真正的經緯度
+        saveLocationRecord(taskKey, {
+            isTestMode: false,
+            userLat: result.userLocation && result.userLocation.lat,
+            userLng: result.userLocation && result.userLocation.lng,
+            accuracy: result.userLocation && result.userLocation.accuracy,
+            distance: result.distance
+        });
         const verificationData = {
             taskKey,
             timestamp: Date.now(),
-            expiresAt: Date.now() + 5 * 60 * 1000 // 5 分鐘
+            expiresAt: Date.now() + 5 * 60 * 1000, // 5 分鐘
+            isTestMode: false,
+            userLat: result.userLocation && result.userLocation.lat,
+            userLng: result.userLocation && result.userLocation.lng
         };
         sessionStorage.setItem(`location_verified_${taskKey}`, JSON.stringify(verificationData));
     } else {
+        if (result.userLocation) {
+            saveLocationRecord(taskKey, {
+                isTestMode: false,
+                userLat: result.userLocation.lat,
+                userLng: result.userLocation.lng,
+                accuracy: result.userLocation.accuracy,
+                distance: result.distance
+            });
+        }
         // 不在範圍內 - 顯示提示
         const isMobile = window.innerWidth <= 768;
         resultCard.innerHTML = `
@@ -522,11 +616,16 @@ function showLocationResult(overlay, result, taskKey) {
                 // 使用統一的測試模式啟用函數
                 const enableTest = window.enableTestMode || enableTestMode;
                 if (typeof enableTest === 'function') {
-                    enableTest(taskKey);
+                    enableTest(taskKey, result && result.userLocation);
                 } else {
                     console.error('[位置驗證] enableTestMode 函數不存在，手動設置');
                     // 手動設置測試模式
                     sessionStorage.setItem(`test_mode_${taskKey}`, 'true');
+                    saveLocationRecord(taskKey, {
+                        isTestMode: true,
+                        userLat: result && result.userLocation && result.userLocation.lat,
+                        userLng: result && result.userLocation && result.userLocation.lng
+                    });
                     const verificationData = {
                         taskKey,
                         timestamp: Date.now(),
@@ -592,13 +691,7 @@ function showLocationResult(overlay, result, taskKey) {
                             e2.stopPropagation();
                             console.log('[位置驗證] 點擊開始任務按鈕（測試模式）');
                             // 確保測試模式已啟用（以防萬一）
-                            const enableTest2 = window.enableTestMode || enableTestMode;
-                            if (typeof enableTest2 === 'function') {
-                                enableTest2(taskKey);
-                            }
-                            overlay.remove();
-                            // 觸發頁面重新載入以顯示任務內容
-                            window.location.reload();
+                    enableTestModeThenReload(taskKey, overlay, result && result.userLocation);
                         });
                     }
                 }, 100);
@@ -759,35 +852,7 @@ async function initLocationCheck(taskKey) {
         // 處理錯誤狀態下的測試模式點擊
         const handleErrorTestModeClick = function(e, taskKey, overlay) {
             try {
-                // 使用統一的測試模式啟用函數
-                const enableTest = window.enableTestMode || enableTestMode;
-                if (typeof enableTest === 'function') {
-                    console.log('[位置驗證] 使用 enableTestMode 函數');
-                    enableTest(taskKey);
-                } else {
-                    console.warn('[位置驗證] enableTestMode 函數不存在，手動設置');
-                    // 手動設置測試模式
-                    sessionStorage.setItem(`test_mode_${taskKey}`, 'true');
-                    const verificationData = {
-                        taskKey,
-                        timestamp: Date.now(),
-                        expiresAt: Date.now() + 5 * 60 * 1000,
-                        isTestMode: true
-                    };
-                    sessionStorage.setItem(`location_verified_${taskKey}`, JSON.stringify(verificationData));
-                }
-                
-                // 驗證設置是否成功
-                const testModeSet = sessionStorage.getItem(`test_mode_${taskKey}`) === 'true';
-                console.log('[位置驗證] 測試模式設置結果:', testModeSet);
-                
-                if (testModeSet) {
-                    overlay.remove();
-                    console.log('[位置驗證] 重新載入頁面');
-                    window.location.reload();
-                } else {
-                    throw new Error('測試模式設置失敗');
-                }
+                enableTestModeThenReload(taskKey, overlay);
             } catch (err) {
                 console.error('[位置驗證] 啟用測試模式失敗:', err);
                 const currentLang = window.I18n ? window.I18n.getCurrentLanguage() : 'zh-TW';
@@ -894,28 +959,61 @@ function isLocationVerified(taskKey) {
 }
 
 // 標記位置為已驗證
-function markLocationVerified(taskKey) {
+function markLocationVerified(taskKey, userLocation) {
+    saveLocationRecord(taskKey, {
+        isTestMode: false,
+        userLat: userLocation && userLocation.lat,
+        userLng: userLocation && userLocation.lng,
+        accuracy: userLocation && userLocation.accuracy
+    });
     const verificationData = {
         taskKey,
         timestamp: Date.now(),
         expiresAt: Date.now() + 5 * 60 * 1000, // 5 分鐘
-        isTestMode: false
+        isTestMode: false,
+        userLat: userLocation && userLocation.lat,
+        userLng: userLocation && userLocation.lng
     };
     sessionStorage.setItem(`location_verified_${taskKey}`, JSON.stringify(verificationData));
 }
 
-// 啟用測試模式（模擬在當地位置）
-function enableTestMode(taskKey) {
-    // 設置測試模式標記（兩種方式都設置，確保兼容性）
+// 啟用測試模式：仍記錄使用者真正的經緯度，並另外記下關卡座標
+function enableTestMode(taskKey, knownUserLocation) {
     sessionStorage.setItem(`test_mode_${taskKey}`, 'true');
-    // 同時標記為已驗證，並標記為測試模式
-    const verificationData = {
-        taskKey,
-        timestamp: Date.now(),
-        expiresAt: Date.now() + 5 * 60 * 1000, // 5 分鐘
-        isTestMode: true // 標記為測試模式
+
+    const existing = getLocationRecord(taskKey);
+    const known = knownUserLocation || (existing && existing.userLat != null ? {
+        lat: existing.userLat,
+        lng: existing.userLng,
+        accuracy: existing.accuracy
+    } : null);
+
+    const writeFlags = function(userLocation) {
+        saveLocationRecord(taskKey, {
+            isTestMode: true,
+            userLat: userLocation && userLocation.lat,
+            userLng: userLocation && userLocation.lng,
+            accuracy: userLocation && userLocation.accuracy
+        });
+        const verificationData = {
+            taskKey,
+            timestamp: Date.now(),
+            expiresAt: Date.now() + 5 * 60 * 1000,
+            isTestMode: true,
+            userLat: userLocation && userLocation.lat,
+            userLng: userLocation && userLocation.lng
+        };
+        sessionStorage.setItem(`location_verified_${taskKey}`, JSON.stringify(verificationData));
     };
-    sessionStorage.setItem(`location_verified_${taskKey}`, JSON.stringify(verificationData));
+
+    writeFlags(known);
+    if (known) return Promise.resolve();
+
+    return captureUserGpsBestEffort().then(function(pos) {
+        writeFlags(pos);
+    }).catch(function() {
+        writeFlags(null);
+    });
 }
 
 // 阻止任務內容顯示（如果未驗證）
@@ -1036,11 +1134,11 @@ function blockTaskContent(taskKey) {
             initLocationCheck(taskKey);
         } else if (e.target.id === 'start-test-mode' || e.target.closest('#start-test-mode')) {
             console.log('[位置驗證] 點擊測試模式按鈕');
-            // 啟用測試模式（模擬在當地位置）
-            enableTestMode(taskKey);
-            blockOverlay.remove();
-            // 觸發頁面重新載入以顯示任務內容
-            window.location.reload();
+            const testBtn = e.target.closest('#start-test-mode') || e.target;
+            if (testBtn.dataset && testBtn.dataset.busy === '1') return;
+            if (testBtn.dataset) testBtn.dataset.busy = '1';
+            if (testBtn.textContent) testBtn.textContent = '正在記錄目前位置...';
+            enableTestModeThenReload(taskKey, blockOverlay);
         }
     });
     
@@ -1060,9 +1158,10 @@ function blockTaskContent(taskKey) {
         if (testBtn) {
             testBtn.addEventListener('click', () => {
                 console.log('[位置驗證] 點擊測試模式按鈕（備用）');
-                enableTestMode(taskKey);
-                blockOverlay.remove();
-                window.location.reload();
+                if (testBtn.dataset && testBtn.dataset.busy === '1') return;
+                if (testBtn.dataset) testBtn.dataset.busy = '1';
+                testBtn.textContent = '正在記錄目前位置...';
+                enableTestModeThenReload(taskKey, blockOverlay);
             });
         }
     }, 50);
@@ -1073,6 +1172,10 @@ window.blockTaskContent = blockTaskContent;
 window.isLocationVerified = isLocationVerified;
 window.enableTestMode = enableTestMode;
 window.initLocationCheck = initLocationCheck;
+window.TASK_LOCATIONS = TASK_LOCATIONS;
+window.getUserLocation = getUserLocation;
+window.getLocationRecord = getLocationRecord;
+window.formatCoord = formatCoord;
 
 // 導出函數供其他腳本使用
 if (typeof module !== 'undefined' && module.exports) {
@@ -1082,7 +1185,9 @@ if (typeof module !== 'undefined' && module.exports) {
         isLocationVerified,
         blockTaskContent,
         checkLocationAccess,
-        enableTestMode
+        enableTestMode,
+        getLocationRecord,
+        getUserLocation
     };
 }
 

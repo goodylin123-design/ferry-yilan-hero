@@ -54,7 +54,83 @@ const SheetSync = {
             rating: rating
         };
 
-        this._post(payload).catch(() => this._enqueue(payload));
+        this._withLocation(note.mission || '', (loc) => {
+            const body = Object.assign({}, payload, loc);
+            this._post(body).catch(() => this._enqueue(body));
+        });
+    },
+
+    _roundCoord: function(value) {
+        if (window.formatCoord) return window.formatCoord(value);
+        const n = Number(value);
+        if (!isFinite(n)) return '';
+        return String(Math.round(n * 1e6) / 1e6);
+    },
+
+    _withLocation: function(mission, done) {
+        const stored = (window.getLocationRecord && window.getLocationRecord(mission)) || {};
+        const isTest = stored.isTestMode === true ||
+            (mission && sessionStorage.getItem('test_mode_' + mission) === 'true');
+        const taskLoc = (window.TASK_LOCATIONS && window.TASK_LOCATIONS[mission]) || {};
+
+        const finish = (user) => {
+            const userLat = user && user.lat != null ? user.lat : stored.userLat;
+            const userLng = user && user.lng != null ? user.lng : stored.userLng;
+            const targetLat = isTest
+                ? (taskLoc.lat != null ? taskLoc.lat : stored.targetLat)
+                : '';
+            const targetLng = isTest
+                ? (taskLoc.lng != null ? taskLoc.lng : stored.targetLng)
+                : '';
+            done({
+                locationMode: isTest ? '體驗測試' : (userLat != null && userLat !== '' ? '實地' : ''),
+                userLat: this._roundCoord(userLat),
+                userLng: this._roundCoord(userLng),
+                targetLat: this._roundCoord(targetLat),
+                targetLng: this._roundCoord(targetLng)
+            });
+        };
+
+        const geoFn = typeof window.getUserLocation === 'function'
+            ? window.getUserLocation
+            : function() {
+                return new Promise(function(resolve, reject) {
+                    if (!navigator.geolocation) {
+                        reject(new Error('no geo'));
+                        return;
+                    }
+                    navigator.geolocation.getCurrentPosition(
+                        function(p) {
+                            resolve({
+                                lat: p.coords.latitude,
+                                lng: p.coords.longitude,
+                                accuracy: p.coords.accuracy
+                            });
+                        },
+                        reject,
+                        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+                    );
+                });
+            };
+
+        let settled = false;
+        const timer = setTimeout(() => {
+            if (settled) return;
+            settled = true;
+            finish(null);
+        }, 6000);
+
+        geoFn().then((pos) => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            finish(pos);
+        }).catch(() => {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            finish(null);
+        });
     },
 
     _post: function(payload) {

@@ -19,7 +19,12 @@ function doPost(e) {
       String(data.userAgent || '').replace(/,/g, ';'),
       data.hasAudio ? '是' : '否',
       data.rating || '',
-      data.hasAudio ? '有錄音（存在手機）' : ''
+      data.hasAudio ? '有錄音（存在手機）' : '',
+      data.locationMode || '',
+      data.userLat || '',
+      data.userLng || '',
+      data.targetLat || '',
+      data.targetLng || ''
     ];
     const nextRow = sheet.getLastRow() + 1;
     sheet.getRange(nextRow, 1, 1, row.length).setValues([row]);
@@ -44,7 +49,11 @@ function doGet(e) {
 function getOrCreateSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(SHEET_NAME);
-  const headers = ['收到時間', '關卡', '旅人ID', '情緒', '筆記內容', '記錄時間', '裝置資訊', '是否錄音', '評分', '錄音備註'];
+  const headers = [
+    '收到時間', '關卡', '旅人ID', '情緒', '筆記內容', '記錄時間', '裝置資訊',
+    '是否錄音', '評分', '錄音備註',
+    '定位模式', '使用者緯度', '使用者經度', '關卡緯度', '關卡經度'
+  ];
 
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
