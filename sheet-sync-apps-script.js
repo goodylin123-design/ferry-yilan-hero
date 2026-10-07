@@ -1,10 +1,21 @@
 // 請整份貼到 Google 試算表「擴充功能 → Apps Script」後，
 // 「部署」→「管理部署作業」→ 鉛筆 → 版本選「新版本」→ 部署（網址不要變）。
 // 不需要執行任何函式，也不需要雲端硬碟權限。
+//
+// 20 人同時存筆記時，用 ScriptLock 排隊寫入，避免兩筆搶到同一列而覆蓋。
 
 const SHEET_NAME = '心靈筆記';
 
 function doPost(e) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(30000);
+  } catch (lockErr) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ status: 'busy', message: String(lockErr) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   try {
     const sheet = getOrCreateSheet();
     const data = JSON.parse(e.postData.contents);
@@ -26,8 +37,8 @@ function doPost(e) {
       data.targetLat || '',
       data.targetLng || ''
     ];
-    const nextRow = sheet.getLastRow() + 1;
-    sheet.getRange(nextRow, 1, 1, row.length).setValues([row]);
+    sheet.appendRow(row);
+    SpreadsheetApp.flush();
 
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'ok' }))
@@ -37,6 +48,8 @@ function doPost(e) {
     return ContentService
       .createTextOutput(JSON.stringify({ status: 'error', message: String(err) }))
       .setMimeType(ContentService.MimeType.JSON);
+  } finally {
+    lock.releaseLock();
   }
 }
 
@@ -63,8 +76,18 @@ function getOrCreateSheet() {
     return sheet;
   }
 
-  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-  sheet.setFrozenRows(1);
-  sheet.getRange('A:A').setNumberFormat('yyyy/mm/dd hh:mm:ss');
+  const existing = sheet.getRange(1, 1, 1, headers.length).getValues()[0];
+  let needHeader = false;
+  for (var i = 0; i < headers.length; i++) {
+    if (existing[i] !== headers[i]) {
+      needHeader = true;
+      break;
+    }
+  }
+  if (needHeader) {
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+    sheet.setFrozenRows(1);
+    sheet.getRange('A:A').setNumberFormat('yyyy/mm/dd hh:mm:ss');
+  }
   return sheet;
 }
